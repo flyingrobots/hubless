@@ -1,0 +1,23 @@
+{
+  "id": "hubless/story/0002",
+  "title": "As a developer I can manage issues via CLI commands",
+  "status": "PLANNED",
+  "persona": "Developer",
+  "need": "create and review work items without leaving the terminal",
+  "outcome": "CLI supports list/view/create and writes append-only event commits",
+  "acceptance_criteria": [
+    "hubless create/list/view commands exist",
+    "Event commits stored under refs/hubless/issues/*",
+    "Snapshots/catalog keep responses <200 ms"
+  ],
+  "features": [
+    "hubless/feature/event-store-cli"
+  ],
+  "dependencies": [
+    "hubless/story/0001"
+  ],
+  "tasks": [
+    "hubless/m1/task/0002",
+    "hubless/m1/task/0003"
+  ]
+}

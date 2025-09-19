@@ -1,0 +1,57 @@
+{
+  "id": "hubless/m1/task/0003",
+  "title": "Implement Git event store adapter",
+  "status": "PLANNED",
+  "owner": null,
+  "description": "Build the gitstore adapter that writes issue events, maintains catalog commits, and supports snapshots as outlined in docs/TechSpec.md.",
+  "labels": [
+    "m1-cli",
+    "event-store"
+  ],
+  "links": [
+    {
+      "type": "doc",
+      "url": "../../docs/TechSpec.md",
+      "label": "Technical spec"
+    },
+    {
+      "type": "doc",
+      "url": "../../docs/reference/implementation-skeleton.md",
+      "label": "Implementation skeleton"
+    }
+  ],
+  "badges": [],
+  "created_at": "2025-09-18",
+  "updated_at": null,
+  "notes": [],
+  "required_inputs": [
+    {
+      "resource": "../../docs/TechSpec.md",
+      "exclusivity": "read-only",
+      "notes": "Data model, ref layout, snapshot rules."
+    },
+    {
+      "resource": "../../docs/reference/implementation-skeleton.md",
+      "exclusivity": "read-only",
+      "notes": "Adapter expectations."
+    }
+  ],
+  "expected_outputs": [
+    {
+      "resource": "../../internal/adapters/gitstore",
+      "notes": "Go package implementing EventStore port with tests."
+    },
+    {
+      "resource": "../../docs/TechSpec.md",
+      "notes": "Updated if assumptions change."
+    }
+  ],
+  "expertise": [
+    "Go",
+    "Git plumbing",
+    "Event sourcing"
+  ],
+  "dependencies": [
+    "hubless/m1/task/0002"
+  ]
+}

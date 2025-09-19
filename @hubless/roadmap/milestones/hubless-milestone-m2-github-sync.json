@@ -1,0 +1,23 @@
+{
+  "id": "hubless/milestone/m2-github-sync",
+  "title": "GitHub synchronization",
+  "status": "PLANNED",
+  "description": "Round-trip GitHub integration with stable event IDs and mapping metadata.",
+  "timeframe": {"start": null, "end": null},
+  "objectives": [
+    "hubless sync pushes/pulls GitHub projections",
+    "GitHub mapping stored under refs/hubless/meta"
+  ],
+  "success_metrics": [
+    "Bidirectional sync demoed on sample repo without divergence"
+  ],
+  "dependencies": [
+    "hubless/milestone/m1-mvp"
+  ],
+  "features": [
+    "hubless/feature/git-sync",
+    "hubless/feature/github-projection"
+  ],
+  "tasks": [],
+  "notes": []
+}

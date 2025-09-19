@@ -1,0 +1,21 @@
+{
+  "id": "hubless/story/0001",
+  "title": "As a maintainer I have documented workflows and automation",
+  "status": "IN_PROGRESS",
+  "persona": "Maintainer",
+  "need": "establish predictable processes so contributors can work autonomously",
+  "outcome": "Docs, schemas, and tasks guide contributors without ad-hoc guidance",
+  "acceptance_criteria": [
+    "Workflow captured in AGENTS.md and CONTRIBUTING.md",
+    "Structured data available in @hubless for automation",
+    "Task DAG reflects current dependencies"
+  ],
+  "features": [
+    "hubless/feature/repo-foundations"
+  ],
+  "dependencies": [],
+  "tasks": [
+    "hubless/m0/task/0001",
+    "hubless/m0/task/0004"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "hubless/feature/git-sync",
+  "title": "Robust Git synchronization",
+  "status": "PLANNED",
+  "description": "Automate fetching, reconciling, and pushing Hubless refs across remotes with deterministic dedupe.",
+  "value": "Ensures teams can collaborate offline and merge event histories safely.",
+  "metrics": [
+    "hubless sync handles set-union without conflicts",
+    "Task DAG frontier uses synced state"
+  ],
+  "milestones": [
+    "hubless/milestone/m2-github-sync"
+  ],
+  "stories": [
+    "hubless/story/0004"
+  ],
+  "dependencies": [
+    "hubless/feature/event-store-cli"
+  ],
+  "tasks": []
+}

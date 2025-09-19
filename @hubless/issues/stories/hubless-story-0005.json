@@ -1,0 +1,20 @@
+{
+  "id": "hubless/story/0005",
+  "title": "As a maintainer I can mirror events to GitHub",
+  "status": "PLANNED",
+  "persona": "Maintainer",
+  "need": "share updates with stakeholders tied to GitHub",
+  "outcome": "GitHub issues/comments reflect Hubless state via projection",
+  "acceptance_criteria": [
+    "New Hubless events publish to GitHub via API",
+    "Incoming GitHub updates append events with stable IDs",
+    "Mapping stored in refs/hubless/meta/github-map"
+  ],
+  "features": [
+    "hubless/feature/github-projection"
+  ],
+  "dependencies": [
+    "hubless/story/0004"
+  ],
+  "tasks": []
+}

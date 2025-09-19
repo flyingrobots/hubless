@@ -1,0 +1,21 @@
+{
+  "id": "hubless/feature/tui-experience",
+  "title": "Magit-grade TUI experience",
+  "status": "PLANNED",
+  "description": "Deliver Bubbletea-based list, detail, and kanban views with keyboard-driven workflows.",
+  "value": "Gives developers an ergonomic interface that keeps them in the terminal.",
+  "metrics": [
+    "List/detail/kanban views implemented",
+    "User feedback scores beating gh issue list"
+  ],
+  "milestones": [
+    "hubless/milestone/m1-mvp"
+  ],
+  "stories": [
+    "hubless/story/0003"
+  ],
+  "dependencies": [
+    "hubless/feature/event-store-cli"
+  ],
+  "tasks": []
+}

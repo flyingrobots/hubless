@@ -1,0 +1,22 @@
+{
+  "id": "hubless/feature/ide-integration",
+  "title": "Editor integrations via LSP",
+  "status": "PLANNED",
+  "description": "Expose Hubless data through an LSP endpoint and lightweight IDE extensions.",
+  "value": "Brings Hubless workflows directly into VS Code, JetBrains, and other editors.",
+  "metrics": [
+    "LSP server responds to issue queries",
+    "At least one IDE plugin demoed"
+  ],
+  "milestones": [
+    "hubless/milestone/m3-ide"
+  ],
+  "stories": [
+    "hubless/story/0006"
+  ],
+  "dependencies": [
+    "hubless/feature/tui-experience",
+    "hubless/feature/git-sync"
+  ],
+  "tasks": []
+}

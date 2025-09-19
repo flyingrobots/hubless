@@ -1,0 +1,22 @@
+{
+  "id": "hubless/milestone/m3-ide",
+  "title": "IDE integrations",
+  "status": "PLANNED",
+  "description": "Expose Hubless data in editors via LSP and plugin prototypes.",
+  "timeframe": {"start": null, "end": null},
+  "objectives": [
+    "LSP service providing issue/board data",
+    "Prototype extensions for VS Code or JetBrains"
+  ],
+  "success_metrics": [
+    "Developers interact with Hubless from IDE without switching contexts"
+  ],
+  "dependencies": [
+    "hubless/milestone/m2-github-sync"
+  ],
+  "features": [
+    "hubless/feature/ide-integration"
+  ],
+  "tasks": [],
+  "notes": []
+}

@@ -1,0 +1,23 @@
+{
+  "id": "hubless/milestone/m1-5-enhancements",
+  "title": "Filters and activity enhancements",
+  "status": "PLANNED",
+  "description": "Add saved filters, activity feeds, and catalog polish.",
+  "timeframe": {"start": null, "end": null},
+  "objectives": [
+    "Query language for issue filtering",
+    "Feed ref powering recent activity view"
+  ],
+  "success_metrics": [
+    "Saved filters persisted across sessions",
+    "Feed renders under 100 ms"
+  ],
+  "dependencies": [
+    "hubless/milestone/m1-mvp"
+  ],
+  "features": [
+    "hubless/feature/tui-experience"
+  ],
+  "tasks": [],
+  "notes": []
+}

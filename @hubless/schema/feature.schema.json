@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/flyingrobots/hubless/@hubless/schema/feature.schema.json",
+  "title": "Hubless Feature",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "status",
+    "description",
+    "value"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9\-]+/feature/[a-z0-9\-]+$",
+      "description": "Identifier e.g. hubless/feature/event-store"
+    },
+    "title": {"type": "string"},
+    "status": {
+      "type": "string",
+      "enum": ["IDEA", "PLANNED", "IN_PROGRESS", "BLOCKED", "COMPLETED", "DEFERRED"]
+    },
+    "description": {"type": "string"},
+    "value": {"type": "string", "description": "Outcome or customer value"},
+    "metrics": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9\-]+/milestone/[a-z0-9\-]+$"
+      }
+    },
+    "stories": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9\-]+/story/[0-9]{4}$"
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9\-]+/feature/[a-z0-9\-]+$"
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9\-]+/[a-z0-9\-]+/[a-z0-9\-]+/[0-9]{4}$"
+      }
+    }
+  },
+  "additionalProperties": false
+}

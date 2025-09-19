@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/flyingrobots/hubless/@hubless/schema/milestone.schema.json",
+  "title": "Hubless Milestone",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "status",
+    "description",
+    "timeframe",
+    "objectives"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9\-]+/milestone/[a-z0-9\-]+$",
+      "description": "Identifier e.g. hubless/milestone/m1"
+    },
+    "title": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["PLANNED", "IN_PROGRESS", "BLOCKED", "COMPLETED", "DEFERRED"]
+    },
+    "description": {
+      "type": "string"
+    },
+    "timeframe": {
+      "type": "object",
+      "required": ["start", "end"],
+      "properties": {
+        "start": {"type": ["string", "null"], "format": "date"},
+        "end": {"type": ["string", "null"], "format": "date"}
+      }
+    },
+    "objectives": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1
+    },
+    "success_metrics": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9\-]+/milestone/[a-z0-9\-]+$"
+      }
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9\-]+/feature/[a-z0-9\-]+$"
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9\-]+/[a-z0-9\-]+/[a-z0-9\-]+/[0-9]{4}$"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "additionalProperties": false
+}

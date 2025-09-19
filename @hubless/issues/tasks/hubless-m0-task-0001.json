@@ -1,0 +1,50 @@
+{
+  "id": "hubless/m0/task/0001",
+  "title": "Port progress updater from Python to Go",
+  "status": "PLANNED",
+  "owner": null,
+  "description": "Implement the ledger/README updater in Go using the algorithm described in docs/reference/update-progress-algorithm.md and replace the legacy Python script.",
+  "labels": [
+    "m0-foundations",
+    "prog"
+  ],
+  "links": [
+    {
+      "type": "doc",
+      "url": "../../docs/reference/update-progress-algorithm.md",
+      "label": "Algorithm spec"
+    }
+  ],
+  "badges": [],
+  "created_at": "2025-09-18",
+  "updated_at": null,
+  "notes": [],
+  "required_inputs": [
+    {
+      "resource": "../../docs/reference/update-progress-algorithm.md",
+      "exclusivity": "read-only",
+      "notes": "Authoritative spec to follow during port."
+    },
+    {
+      "resource": "../..",
+      "exclusivity": "shared",
+      "notes": "Access to git-mind checkout for validation (path via --root)."
+    }
+  ],
+  "expected_outputs": [
+    {
+      "resource": "../../cmd/update-progress",
+      "notes": "Go binary replicating Python behavior with tests."
+    },
+    {
+      "resource": "../../docs/reference/update-progress-algorithm.md",
+      "notes": "Document kept in sync if behavior changes."
+    }
+  ],
+  "expertise": [
+    "Go",
+    "Markdown parsing",
+    "Git tooling"
+  ],
+  "dependencies": []
+}

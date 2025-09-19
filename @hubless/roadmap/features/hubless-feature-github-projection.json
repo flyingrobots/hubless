@@ -1,0 +1,21 @@
+{
+  "id": "hubless/feature/github-projection",
+  "title": "GitHub projection integration",
+  "status": "PLANNED",
+  "description": "Mirror Hubless events to GitHub issues/PRs and import remote changes without divergence.",
+  "value": "Lets teams collaborate with GitHub-dependent stakeholders while keeping Git as the source of truth.",
+  "metrics": [
+    "Round-trip sync with stable event IDs",
+    "GitHub mapping maintained in refs/hubless/meta"
+  ],
+  "milestones": [
+    "hubless/milestone/m2-github-sync"
+  ],
+  "stories": [
+    "hubless/story/0005"
+  ],
+  "dependencies": [
+    "hubless/feature/git-sync"
+  ],
+  "tasks": []
+}

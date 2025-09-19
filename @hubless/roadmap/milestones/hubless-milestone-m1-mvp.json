@@ -1,0 +1,24 @@
+{
+  "id": "hubless/milestone/m1-mvp",
+  "title": "MVP release",
+  "status": "PLANNED",
+  "description": "Deliver a Magit-speed TUI with event snapshots and Git-only sync.",
+  "timeframe": {"start": null, "end": null},
+  "objectives": [
+    "Bubbletea list/detail/kanban views",
+    "Snapshot + catalog indexing for <200 ms list times"
+  ],
+  "success_metrics": [
+    "Internal dogfood team replaces GitHub Issues",
+    "Issue list renders <200 ms on 10k issues"
+  ],
+  "dependencies": [
+    "hubless/milestone/m0-5-cli-proof"
+  ],
+  "features": [
+    "hubless/feature/event-store-cli",
+    "hubless/feature/tui-experience"
+  ],
+  "tasks": [],
+  "notes": []
+}

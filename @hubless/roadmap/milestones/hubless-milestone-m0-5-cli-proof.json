@@ -1,0 +1,25 @@
+{
+  "id": "hubless/milestone/m0-5-cli-proof",
+  "title": "CLI proof of concept",
+  "status": "PLANNED",
+  "description": "Ship minimal CLI commands backed by event commits to validate the data model.",
+  "timeframe": {"start": null, "end": null},
+  "objectives": [
+    "Command-line create/list/view wired to event store",
+    "Append-only refs validated in a test repository"
+  ],
+  "success_metrics": [
+    "Developers can create and view issues without web UI"
+  ],
+  "dependencies": [
+    "hubless/milestone/m0-foundations"
+  ],
+  "features": [
+    "hubless/feature/event-store-cli"
+  ],
+  "tasks": [
+    "hubless/m1/task/0002",
+    "hubless/m1/task/0003"
+  ],
+  "notes": []
+}

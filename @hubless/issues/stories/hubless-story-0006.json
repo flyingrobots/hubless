@@ -1,0 +1,20 @@
+{
+  "id": "hubless/story/0006",
+  "title": "As a developer I can interact with Hubless from my IDE",
+  "status": "PLANNED",
+  "persona": "Developer",
+  "need": "avoid context switching between editor and terminal",
+  "outcome": "LSP and plugins expose Hubless data inside IDEs",
+  "acceptance_criteria": [
+    "LSP responds to issue queries and updates",
+    "IDE plugin surfaces Hubless panels"
+  ],
+  "features": [
+    "hubless/feature/ide-integration"
+  ],
+  "dependencies": [
+    "hubless/story/0004",
+    "hubless/story/0003"
+  ],
+  "tasks": []
+}

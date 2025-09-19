@@ -1,0 +1,25 @@
+{
+  "id": "hubless/feature/event-store-cli",
+  "title": "Event store and CLI foundations",
+  "status": "PLANNED",
+  "description": "Implement the Git-backed event store and initial CLI commands for listing, viewing, and creating work items.",
+  "value": "Delivers the core ability to track work directly in Git and interact via commands.",
+  "metrics": [
+    "CLI list/view/create commands available",
+    "Event commits stored under refs/hubless/**"
+  ],
+  "milestones": [
+    "hubless/milestone/m0-5-cli-proof",
+    "hubless/milestone/m1-mvp"
+  ],
+  "stories": [
+    "hubless/story/0002"
+  ],
+  "dependencies": [
+    "hubless/feature/repo-foundations"
+  ],
+  "tasks": [
+    "hubless/m1/task/0002",
+    "hubless/m1/task/0003"
+  ]
+}

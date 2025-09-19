@@ -1,0 +1,31 @@
+{
+  "id": "hubless/m0/task/0004",
+  "title": "Structure @hubless planning artifacts",
+  "status": "STARTED",
+  "owner": null,
+  "description": "Create schemas and seed milestone, feature, and story records so Hubless automation can build a dependency-aware DAG.",
+  "labels": ["m0-foundations", "planning"],
+  "links": [
+    {"type": "doc", "url": "../../docs/PRD.md", "label": "PRD"},
+    {"type": "doc", "url": "../../docs/TechSpec.md", "label": "Tech spec"}
+  ],
+  "required_inputs": [
+    {"resource": "../../docs/PRD.md", "exclusivity": "read-only", "notes": "Source for milestones and features."},
+    {"resource": "../../docs/TechSpec.md", "exclusivity": "read-only", "notes": "Ensure schemas align with architecture."}
+  ],
+  "expected_outputs": [
+    {"resource": "../../@hubless/schema", "notes": "JSON schemas for milestones, features, stories, tasks."},
+    {"resource": "../../@hubless/roadmap", "notes": "Seed milestone and feature records."},
+    {"resource": "../../@hubless/issues/stories", "notes": "Story records linked to tasks and features."}
+  ],
+  "expertise": ["Product management", "JSON Schema", "Systems thinking"],
+  "dependencies": [
+    "hubless/m0/task/0001"
+  ],
+  "badges": [],
+  "created_at": "2025-09-18",
+  "updated_at": "2025-09-18",
+  "notes": [
+    {"at": "2025-09-18T00:00:00Z", "author": null, "body": "Schema work in progress."}
+  ]
+}

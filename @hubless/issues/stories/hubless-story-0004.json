@@ -1,0 +1,20 @@
+{
+  "id": "hubless/story/0004",
+  "title": "As a contributor I can sync Hubless work via Git remotes",
+  "status": "PLANNED",
+  "persona": "Contributor",
+  "need": "work offline and reconcile changes without conflicts",
+  "outcome": "hubless sync performs fetch/apply/push with dedupe",
+  "acceptance_criteria": [
+    "hubless sync fetches refs/hubless/**",
+    "Conflicts resolved via set-union, no merge commits",
+    "CLI reports pushed/pulled event counts"
+  ],
+  "features": [
+    "hubless/feature/git-sync"
+  ],
+  "dependencies": [
+    "hubless/story/0002"
+  ],
+  "tasks": []
+}

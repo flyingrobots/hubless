@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/flyingrobots/hubless/@hubless/schema/story.schema.json",
+  "title": "Hubless Story",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "status",
+    "persona",
+    "need",
+    "outcome",
+    "acceptance_criteria"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9\-]+/story/[0-9]{4}$",
+      "description": "Identifier e.g. hubless/story/0001"
+    },
+    "title": {"type": "string"},
+    "status": {
+      "type": "string",
+      "enum": ["PLANNED", "IN_PROGRESS", "BLOCKED", "DONE", "DEFERRED"]
+    },
+    "persona": {"type": "string", "description": "User role"},
+    "need": {"type": "string"},
+    "outcome": {"type": "string"},
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9\-]+/feature/[a-z0-9\-]+$"
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9\-]+/story/[0-9]{4}$"
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9\-]+/[a-z0-9\-]+/[a-z0-9\-]+/[0-9]{4}$"
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,24 @@
+{
+  "id": "hubless/milestone/m0-foundations",
+  "title": "Repository foundations",
+  "status": "IN_PROGRESS",
+  "description": "Bootstrap documentation, workflows, and automation scaffolding for Hubless.",
+  "timeframe": {"start": "2025-09-18", "end": null},
+  "objectives": [
+    "Specs and technical designs captured in docs/",
+    "Task DAG schema and automation seeds established"
+  ],
+  "success_metrics": [
+    "All contributors follow documented workflow",
+    "Automations consume structured @hubless data"
+  ],
+  "dependencies": [],
+  "features": [
+    "hubless/feature/repo-foundations"
+  ],
+  "tasks": [
+    "hubless/m0/task/0001",
+    "hubless/m0/task/0004"
+  ],
+  "notes": []
+}

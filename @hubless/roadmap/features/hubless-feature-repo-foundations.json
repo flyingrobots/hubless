@@ -1,0 +1,22 @@
+{
+  "id": "hubless/feature/repo-foundations",
+  "title": "Repository foundations and automation",
+  "status": "IN_PROGRESS",
+  "description": "Establish repository docs, workflow automation, and parity tooling required to bootstrap Hubless development.",
+  "value": "Provides shared understanding and scripts so future work is consistent and automatable.",
+  "metrics": [
+    "Specs documented in docs/ kept up to date",
+    "Task DAG generated from @hubless data"
+  ],
+  "milestones": [
+    "hubless/milestone/m0-foundations"
+  ],
+  "stories": [
+    "hubless/story/0001"
+  ],
+  "dependencies": [],
+  "tasks": [
+    "hubless/m0/task/0001",
+    "hubless/m0/task/0004"
+  ]
+}

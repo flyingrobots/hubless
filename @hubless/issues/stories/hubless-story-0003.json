@@ -1,0 +1,20 @@
+{
+  "id": "hubless/story/0003",
+  "title": "As a developer I can browse and update work in the TUI",
+  "status": "PLANNED",
+  "persona": "Developer",
+  "need": "quickly inspect and reorganize work using keyboard-centric workflows",
+  "outcome": "Bubbletea TUI offers list/detail/kanban views with inline actions",
+  "acceptance_criteria": [
+    "List/detail/kanban views implemented",
+    "Status changes and comments append events",
+    "TUI renders under 200 ms initial load"
+  ],
+  "features": [
+    "hubless/feature/tui-experience"
+  ],
+  "dependencies": [
+    "hubless/story/0002"
+  ],
+  "tasks": []
+}

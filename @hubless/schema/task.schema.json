@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/flyingrobots/hubless/@hubless/schema/task.schema.json",
+  "title": "Hubless Task",
+  "description": "Canonical structure for Hubless work tracking tasks.",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "status",
+    "owner",
+    "description",
+    "created_at",
+    "required_inputs",
+    "expected_outputs",
+    "expertise",
+    "dependencies"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9\\-]+/[a-z0-9\\-]+/[a-z0-9\\-]+/[0-9]{4}$",
+      "description": "Structured identifier {project}/{milestone}/{type}/{number} (e.g., hubless/m0/task/0001)."
+    },
+    "title": {
+      "type": "string",
+      "description": "Short summary of the task."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PLANNED",
+        "STARTED",
+        "BLOCKED",
+        "DONE"
+      ],
+      "description": "Lifecycle state."
+    },
+    "owner": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Assignee or DRI; null if unassigned."
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed context, acceptance criteria, or implementation notes."
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Optional tags (e.g., epic, area, priority)."
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Link category (doc, pr, commit, spec)."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "label": {
+            "type": "string",
+            "description": "Human-readable caption."
+          }
+        }
+      },
+      "description": "External references (design docs, PRs, etc.)."
+    },
+    "badges": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Tested",
+          "Documented",
+          "Shipped"
+        ]
+      },
+      "description": "Completion badges required before archive."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Task creation date (ISO date)."
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date",
+      "description": "Last modification date."
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "at",
+          "body"
+        ],
+        "properties": {
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "author": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional note author."
+          },
+          "body": {
+            "type": "string",
+            "description": "Free-form commentary or small updates."
+          }
+        }
+      }
+    },
+    "required_inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "resource",
+          "exclusivity"
+        ],
+        "properties": {
+          "resource": {
+            "type": "string",
+            "description": "Filesystem path, dataset, environment, or doc."
+          },
+          "exclusivity": {
+            "type": "string",
+            "enum": [
+              "exclusive",
+              "shared",
+              "read-only",
+              "time-sliced"
+            ],
+            "description": "Policy for using the resource while executing the task."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional handling instructions."
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Inputs required to execute the task, with exclusivity policy per resource."
+    },
+    "expected_outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "resource"
+        ],
+        "properties": {
+          "resource": {
+            "type": "string",
+            "description": "Artifact or state change expected on completion."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Acceptance notes or validation guidance."
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Artifacts or states that must exist when the task is DONE."
+    },
+    "expertise": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "description": "Required skills or domains (e.g., Go, Git plumbing, Charmbracelet)."
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9\\-]+/[a-z0-9\\-]+/[a-z0-9\\-]+/[0-9]{4}$"
+      },
+      "description": "Task IDs that must be completed before this task can finish."
+    }
+  },
+  "additionalProperties": false
+}
