@@ -1,0 +1,31 @@
+<svg width="420" height="720" viewBox="0 0 420 720" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .canvas { fill: #ffffff; stroke: #1f2933; stroke-width: 2; }
+    .region { fill: #f5f7fa; stroke: #bcccdc; stroke-width: 1.5; }
+    .section { fill: #e4ebf5; stroke: #7b8794; stroke-dasharray: 5 3; stroke-width: 1; }
+    .label { font-family: 'Arial', sans-serif; font-size: 14px; fill: #102a43; font-weight: bold; }
+    .sublabel { font-family: 'Arial', sans-serif; font-size: 12px; fill: #243b53; }
+  </style>
+  <rect class="canvas" x="4" y="4" width="412" height="712" rx="16" />
+
+  <rect class="region" x="16" y="20" width="388" height="64" rx="12" />
+  <text class="label" x="28" y="58">Statusline · collapsed hints</text>
+
+  <rect class="region" x="16" y="100" width="388" height="520" rx="16" />
+  <text class="label" x="28" y="134">Stacked Sections (Single column)</text>
+
+  <rect class="section" x="28" y="150" width="364" height="80" rx="12" />
+  <text class="sublabel" x="40" y="190">Focus cards</text>
+
+  <rect class="section" x="28" y="240" width="364" height="100" rx="12" />
+  <text class="sublabel" x="40" y="282">Inbox accordion</text>
+
+  <rect class="section" x="28" y="350" width="364" height="100" rx="12" />
+  <text class="sublabel" x="40" y="392">Board metrics ribbon</text>
+
+  <rect class="section" x="28" y="460" width="364" height="80" rx="12" />
+  <text class="sublabel" x="40" y="500">Saved filters · System</text>
+
+  <rect class="region" x="16" y="640" width="388" height="56" rx="12" />
+  <text class="label" x="28" y="676">Footer · Jobs</text>
+</svg>

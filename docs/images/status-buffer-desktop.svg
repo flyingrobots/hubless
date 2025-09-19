@@ -1,0 +1,34 @@
+<svg width="960" height="540" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .canvas { fill: #ffffff; stroke: #1f2933; stroke-width: 2; }
+    .region { fill: #f5f7fa; stroke: #bcccdc; stroke-width: 1.5; }
+    .section { fill: #e4ebf5; stroke: #7b8794; stroke-dasharray: 6 4; stroke-width: 1; }
+    .label { font-family: 'Arial', sans-serif; font-size: 16px; fill: #102a43; font-weight: bold; }
+    .sublabel { font-family: 'Arial', sans-serif; font-size: 13px; fill: #243b53; }
+  </style>
+  <rect class="canvas" x="4" y="4" width="952" height="532" rx="8" />
+
+  <!-- Statusline -->
+  <rect class="region" x="20" y="20" width="920" height="60" rx="8" />
+  <text class="label" x="40" y="56">Statusline · repo · branch · sync health · hints</text>
+
+  <!-- Body layout using Stickers flex rows -->
+  <rect class="region" x="20" y="100" width="920" height="360" rx="12" />
+  <text class="label" x="40" y="134">Status Buffer Sections (Flex column)</text>
+
+  <rect class="section" x="40" y="150" width="880" height="70" rx="8" />
+  <text class="sublabel" x="60" y="190">Focus · Assigned to me · Stickers row: list + counters</text>
+
+  <rect class="section" x="40" y="230" width="880" height="70" rx="8" />
+  <text class="sublabel" x="60" y="270">Inbox · Recent events grouped by milestone</text>
+
+  <rect class="section" x="40" y="310" width="880" height="70" rx="8" />
+  <text class="sublabel" x="60" y="350">Boards snapshot · Column metrics · SLA heat</text>
+
+  <rect class="section" x="40" y="390" width="880" height="50" rx="8" />
+  <text class="sublabel" x="60" y="420">Saved filters · System alerts</text>
+
+  <!-- Footer -->
+  <rect class="region" x="20" y="480" width="920" height="40" rx="8" />
+  <text class="label" x="40" y="508">Footer · Background jobs · Notifications</text>
+</svg>

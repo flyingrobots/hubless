@@ -1,0 +1,62 @@
+{
+  "id": "hubless/m1/task/0005",
+  "title": "Prototype Bubbletea TUI and Fang CLI wireframes with mocked data",
+  "status": "STARTED",
+  "owner": null,
+  "description": "Spin up a Bubbletea-based TUI shell and a Fang CLI stub that render mocked Hubless data so designers can feel the navigation flow before wiring real services.",
+  "labels": [
+    "m1-cli",
+    "tui",
+    "cli"
+  ],
+  "links": [
+    {
+      "type": "doc",
+      "url": "../../docs/design/tui.md",
+      "label": "TUI design spec"
+    },
+    {
+      "type": "doc",
+      "url": "../../docs/reference/implementation-skeleton.md",
+      "label": "Implementation skeleton"
+    }
+  ],
+  "badges": [],
+  "created_at": "2025-09-19",
+  "updated_at": null,
+  "notes": [
+    {
+      "at": "2025-09-19T00:00:00Z",
+      "author": "codex",
+      "body": "Task created to track mocked TUI/CLI wireframe milestone."
+    }
+  ],
+  "required_inputs": [
+    {
+      "resource": "../../docs/design/tui.md",
+      "exclusivity": "read-only",
+      "notes": "Keyboard model and layout expectations."
+    },
+    {
+      "resource": "https://github.com/76creates/stickers",
+      "exclusivity": "read-only",
+      "notes": "Responsive flexbox layout primitives."
+    }
+  ],
+  "expected_outputs": [
+    {
+      "resource": "../../internal/ui/tui/mock",
+      "notes": "Bubbletea model rendering mocked status/list/detail views."
+    },
+    {
+      "resource": "../../cmd/hubless",
+      "notes": "Fang commands returning mocked data for navigation rehearsal."
+    }
+  ],
+  "expertise": [
+    "Go",
+    "Bubbletea",
+    "Charmbracelet Fang"
+  ],
+  "dependencies": []
+}

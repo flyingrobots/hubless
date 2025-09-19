@@ -1,0 +1,33 @@
+<svg width="420" height="720" viewBox="0 0 420 720" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .canvas { fill: #ffffff; stroke: #1f2933; stroke-width: 2; }
+    .statusline { fill: #f5f7fa; stroke: #cbd2d9; stroke-width: 1.5; }
+    .column { fill: #eef2f8; stroke: #9fb3c8; stroke-width: 1; stroke-dasharray: 5 3; }
+    .card { fill: #ffffff; stroke: #7b8794; stroke-width: 1; }
+    .label { font-family: 'Arial', sans-serif; font-size: 14px; fill: #102a43; font-weight: bold; }
+    .sublabel { font-family: 'Arial', sans-serif; font-size: 12px; fill: #243b53; }
+  </style>
+  <rect class="canvas" x="4" y="4" width="412" height="712" rx="16" />
+
+  <rect class="statusline" x="16" y="20" width="388" height="60" rx="12" />
+  <text class="label" x="28" y="56">Statusline</text>
+
+  <rect class="statusline" x="16" y="96" width="388" height="540" rx="16" />
+  <text class="label" x="28" y="130">Kanban · single column scroll</text>
+
+  <rect class="column" x="28" y="150" width="364" height="120" rx="12" />
+  <text class="sublabel" x="40" y="190">Open</text>
+  <rect class="card" x="40" y="210" width="340" height="32" rx="8" />
+  <rect class="card" x="40" y="252" width="340" height="32" rx="8" />
+
+  <rect class="column" x="28" y="284" width="364" height="120" rx="12" />
+  <text class="sublabel" x="40" y="324">In Progress</text>
+  <rect class="card" x="40" y="344" width="340" height="32" rx="8" />
+
+  <rect class="column" x="28" y="418" width="364" height="120" rx="12" />
+  <text class="sublabel" x="40" y="458">Done</text>
+  <rect class="card" x="40" y="478" width="340" height="32" rx="8" />
+
+  <rect class="statusline" x="16" y="652" width="388" height="52" rx="12" />
+  <text class="label" x="28" y="686">Footer</text>
+</svg>

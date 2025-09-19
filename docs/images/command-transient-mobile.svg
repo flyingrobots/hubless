@@ -1,0 +1,20 @@
+<svg width="420" height="720" viewBox="0 0 420 720" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .canvas { fill: #0b1f33; opacity: 0.1; }
+    .overlay { fill: #ffffff; stroke: #334e68; stroke-width: 2; }
+    .label { font-family: 'Arial', sans-serif; font-size: 14px; fill: #102a43; font-weight: bold; }
+    .entry { font-family: 'Arial', sans-serif; font-size: 12px; fill: #243b53; }
+    .hint { font-family: 'Arial', sans-serif; font-size: 11px; fill: #627d98; }
+  </style>
+  <rect class="canvas" x="0" y="0" width="420" height="720" />
+  <rect class="overlay" x="30" y="120" width="360" height="420" rx="18" />
+  <text class="label" x="60" y="170">Command Palette</text>
+  <rect class="overlay" x="60" y="190" width="300" height="50" rx="12" fill="#f0f4f8" stroke="#cbd2d9" />
+  <text class="entry" x="80" y="220">Search input</text>
+  <rect class="overlay" x="60" y="250" width="300" height="250" rx="12" fill="#f7fafc" stroke="#d9e2ec" />
+  <text class="entry" x="80" y="284">s — Change status</text>
+  <text class="entry" x="80" y="314">a — Assign</text>
+  <text class="entry" x="80" y="344">c — Comment ($EDITOR)</text>
+  <text class="entry" x="80" y="374">g s — Status buffer</text>
+  <text class="hint" x="80" y="404">Use `.` to repeat last action</text>
+</svg>

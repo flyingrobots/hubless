@@ -1,0 +1,25 @@
+<svg width="420" height="720" viewBox="0 0 420 720" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .canvas { fill: #ffffff; stroke: #1f2933; stroke-width: 2; }
+    .region { fill: #f8fafc; stroke: #d2d6dc; stroke-width: 1.5; }
+    .pane { fill: #e4ebf5; stroke: #7b8794; stroke-width: 1; stroke-dasharray: 5 3; }
+    .label { font-family: 'Arial', sans-serif; font-size: 14px; fill: #0b1f33; font-weight: bold; }
+    .sublabel { font-family: 'Arial', sans-serif; font-size: 12px; fill: #2d3a4a; }
+  </style>
+  <rect class="canvas" x="4" y="4" width="412" height="712" rx="16" />
+
+  <rect class="region" x="16" y="20" width="388" height="60" rx="12" />
+  <text class="label" x="28" y="56">Statusline · condensed</text>
+
+  <rect class="region" x="16" y="96" width="388" height="540" rx="16" />
+  <text class="label" x="28" y="130">Stacked list → preview</text>
+
+  <rect class="pane" x="28" y="146" width="364" height="240" rx="12" />
+  <text class="sublabel" x="40" y="186">Issue cards · swipe/fold for metadata</text>
+
+  <rect class="pane" x="28" y="398" width="364" height="180" rx="12" />
+  <text class="sublabel" x="40" y="438">Preview overlay toggled with `o`</text>
+
+  <rect class="region" x="16" y="652" width="388" height="52" rx="12" />
+  <text class="label" x="28" y="686">Footer hints</text>
+</svg>

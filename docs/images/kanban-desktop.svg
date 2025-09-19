@@ -1,0 +1,36 @@
+<svg width="960" height="540" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .canvas { fill: #ffffff; stroke: #1f2933; stroke-width: 2; }
+    .statusline { fill: #f5f7fa; stroke: #cbd2d9; stroke-width: 1.5; }
+    .column { fill: #eef2f8; stroke: #9fb3c8; stroke-width: 1; stroke-dasharray: 6 4; }
+    .card { fill: #ffffff; stroke: #7b8794; stroke-width: 1; }
+    .label { font-family: 'Arial', sans-serif; font-size: 16px; fill: #102a43; font-weight: bold; }
+    .sublabel { font-family: 'Arial', sans-serif; font-size: 13px; fill: #243b53; }
+  </style>
+  <rect class="canvas" x="4" y="4" width="952" height="532" rx="8" />
+
+  <rect class="statusline" x="20" y="20" width="920" height="60" rx="8" />
+  <text class="label" x="40" y="56">Statusline</text>
+
+  <rect class="statusline" x="20" y="100" width="920" height="380" rx="12" />
+  <text class="label" x="40" y="134">Kanban Columns (Stickers flex row)</text>
+
+  <rect class="column" x="40" y="160" width="260" height="300" rx="12" />
+  <text class="sublabel" x="60" y="190">Open · WIP limit</text>
+  <rect class="card" x="60" y="210" width="220" height="40" rx="8" />
+  <rect class="card" x="60" y="260" width="220" height="40" rx="8" />
+  <rect class="card" x="60" y="310" width="220" height="40" rx="8" />
+
+  <rect class="column" x="320" y="160" width="260" height="300" rx="12" />
+  <text class="sublabel" x="340" y="190">In Progress</text>
+  <rect class="card" x="340" y="210" width="220" height="40" rx="8" />
+  <rect class="card" x="340" y="260" width="220" height="40" rx="8" />
+
+  <rect class="column" x="600" y="160" width="260" height="300" rx="12" />
+  <text class="sublabel" x="620" y="190">Done</text>
+  <rect class="card" x="620" y="210" width="220" height="40" rx="8" />
+  <rect class="card" x="620" y="260" width="220" height="40" rx="8" />
+
+  <rect class="statusline" x="20" y="500" width="920" height="32" rx="8" />
+  <text class="label" x="40" y="523">Footer</text>
+</svg>

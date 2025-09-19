@@ -1,0 +1,23 @@
+<svg width="960" height="540" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .canvas { fill: #0b1f33; opacity: 0.08; }
+    .overlay { fill: #ffffff; stroke: #334e68; stroke-width: 2; }
+    .shadow { fill: #000000; opacity: 0.12; }
+    .label { font-family: 'Arial', sans-serif; font-size: 16px; fill: #102a43; font-weight: bold; }
+    .entry { font-family: 'Arial', sans-serif; font-size: 13px; fill: #243b53; }
+    .hint { font-family: 'Arial', sans-serif; font-size: 12px; fill: #627d98; }
+  </style>
+  <rect class="canvas" x="0" y="0" width="960" height="540" />
+  <rect class="shadow" x="180" y="90" width="600" height="360" rx="18" />
+  <rect class="overlay" x="160" y="70" width="600" height="360" rx="18" />
+  <text class="label" x="200" y="120">Command Palette</text>
+  <text class="hint" x="200" y="150">:`filter` — fuzzy search across verbs</text>
+  <rect class="overlay" x="200" y="170" width="520" height="40" rx="10" fill="#f0f4f8" stroke="#cbd2d9" />
+  <text class="entry" x="220" y="197">Search input</text>
+  <text class="hint" x="650" y="198">Ctrl+K</text>
+  <rect class="overlay" x="200" y="224" width="520" height="180" rx="12" fill="#f7fafc" stroke="#d9e2ec" />
+  <text class="entry" x="220" y="256">s — Change status · scope: issue</text>
+  <text class="entry" x="220" y="286">a — Assign · scope: issue</text>
+  <text class="entry" x="220" y="316">c — Comment · opens $EDITOR</text>
+  <text class="entry" x="220" y="346">g s — Jump to status buffer</text>
+</svg>

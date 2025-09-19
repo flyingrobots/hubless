@@ -1,0 +1,32 @@
+<svg width="960" height="540" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .canvas { fill: #ffffff; stroke: #1f2933; stroke-width: 2; }
+    .region { fill: #f7fafc; stroke: #cbd2d9; stroke-width: 1.5; }
+    .pane { fill: #e3f2fd; stroke: #7b8794; stroke-width: 1; stroke-dasharray: 6 4; }
+    .timeline { fill: #fff; stroke: #9fb3c8; stroke-width: 1; stroke-dasharray: 4 4; }
+    .label { font-family: 'Arial', sans-serif; font-size: 16px; fill: #102a43; font-weight: bold; }
+    .sublabel { font-family: 'Arial', sans-serif; font-size: 13px; fill: #243b53; }
+  </style>
+  <rect class="canvas" x="4" y="4" width="952" height="532" rx="8" />
+
+  <rect class="region" x="20" y="20" width="920" height="60" rx="8" />
+  <text class="label" x="40" y="56">Statusline</text>
+
+  <rect class="region" x="20" y="100" width="920" height="380" rx="12" />
+  <text class="label" x="40" y="134">Issue Detail · Stickers layout (content + sidebar)</text>
+
+  <rect class="pane" x="40" y="160" width="620" height="300" rx="12" />
+  <text class="sublabel" x="60" y="190">Sticky header: title, status, quick actions</text>
+  <rect class="timeline" x="60" y="210" width="580" height="230" rx="10" />
+  <text class="sublabel" x="80" y="250">Timeline events rendered with Glamour</text>
+  <text class="sublabel" x="80" y="280">• fold comments</text>
+  <text class="sublabel" x="80" y="310">• follow mode indicator</text>
+
+  <rect class="pane" x="680" y="160" width="220" height="300" rx="12" />
+  <text class="sublabel" x="700" y="190">Sidebar</text>
+  <text class="sublabel" x="700" y="220">• Dependencies</text>
+  <text class="sublabel" x="700" y="250">• Related PRs</text>
+
+  <rect class="region" x="20" y="500" width="920" height="32" rx="8" />
+  <text class="label" x="40" y="523">Footer</text>
+</svg>
