@@ -1,0 +1,20 @@
+# General
+.DS_Store
+.obsidian/
+.env
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.whl
+
+# Go
+bin/
+*.exe
+*.test
+*.out
+coverage*.txt
+*.coverprofile
