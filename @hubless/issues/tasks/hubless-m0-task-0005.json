@@ -1,0 +1,68 @@
+{
+  "id": "hubless/m0/task/0005",
+  "title": "Evaluate markdown component library",
+  "status": "PLANNED",
+  "owner": null,
+  "description": "Assess the existing markdown-transclusion project and plan integration or Go-based alternative for reusable documentation components.",
+  "labels": [
+    "m0-foundations",
+    "docs",
+    "automation"
+  ],
+  "links": [
+    {
+      "type": "repo",
+      "url": "https://github.com/flyingrobots/markdown-transclusion",
+      "label": "markdown-transclusion"
+    },
+    {
+      "type": "doc",
+      "url": "../../docs/PRD.md",
+      "label": "PRD"
+    },
+    {
+      "type": "doc",
+      "url": "../../docs/TechSpec.md",
+      "label": "Tech spec"
+    }
+  ],
+  "required_inputs": [
+    {
+      "resource": "https://github.com/flyingrobots/markdown-transclusion",
+      "exclusivity": "read-only",
+      "notes": "Review existing snippet tooling."
+    },
+    {
+      "resource": "../../docs/PRD.md",
+      "exclusivity": "read-only",
+      "notes": "Identify repeated content candidates."
+    },
+    {
+      "resource": "../../@hubless/schema",
+      "exclusivity": "read-only",
+      "notes": "Ensure schema-driven docs compatible with snippet outputs."
+    }
+  ],
+  "expected_outputs": [
+    {
+      "resource": "../../docs/reference/docs-components-plan.md",
+      "notes": "Plan outlining snippet integration approach."
+    },
+    {
+      "resource": "../../@hubless/roadmap/features/hubless-feature-docs-components.json",
+      "notes": "Feature status updated with findings."
+    }
+  ],
+  "expertise": [
+    "Documentation tooling",
+    "Go",
+    "Automation pipelines"
+  ],
+  "dependencies": [
+    "hubless/m0/task/0004"
+  ],
+  "badges": [],
+  "created_at": "2025-09-18",
+  "updated_at": null,
+  "notes": []
+}

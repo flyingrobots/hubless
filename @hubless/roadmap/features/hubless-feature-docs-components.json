@@ -1,0 +1,23 @@
+{
+  "id": "hubless/feature/docs-components",
+  "title": "Markdown component library integration",
+  "status": "PLANNED",
+  "description": "Reuse or recreate markdown-transclusion workflows to assemble documentation from reusable components.",
+  "value": "Creates reusable docs building blocks so specs stay consistent and automation can regenerate outputs quickly.",
+  "metrics": [
+    "Docs assembled from components in CI",
+    "At least three docs share common snippets"
+  ],
+  "milestones": [
+    "hubless/milestone/m0-foundations"
+  ],
+  "stories": [
+    "hubless/story/0007"
+  ],
+  "dependencies": [
+    "hubless/feature/repo-foundations"
+  ],
+  "tasks": [
+    "hubless/m0/task/0005"
+  ]
+}

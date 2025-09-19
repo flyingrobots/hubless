@@ -1,15 +1,18 @@
 # Hubless Implementation Skeleton
 
 ## Document Control
+
 - Version: 0.1
 - Last updated: 2025-09-18
 - Maintainer: Platform Engineering
 
 ## 1. Purpose
+
 This reference collects scaffolding snippets for implementing Hubless using Go. It mirrors the architecture described in `docs/TechSpec.md` and provides minimal, compilable examples to accelerate prototyping. The code is illustrative and omits error handling and testing for brevity.
 
 ## 2. Project Layout
-```
+
+```bash
 hubless/
 ├─ cmd/
 │  └─ hubless/
@@ -35,6 +38,7 @@ hubless/
 ```
 
 ## 3. Module Definition (`go.mod`)
+
 ```go
 module github.com/flyingrobots/hubless
 
@@ -49,7 +53,9 @@ require (
 ```
 
 ## 4. Domain Layer
+
 ### 4.1 Events (`internal/domain/events.go`)
+
 ```go
 package domain
 
@@ -78,6 +84,7 @@ type Event struct {
 ```
 
 ### 4.2 Issue Aggregate (`internal/domain/issue.go`)
+
 ```go
 package domain
 
@@ -128,6 +135,7 @@ func Replay(id IssueID, events []Event) Issue {
 ```
 
 ## 5. Application Layer (`internal/application/services.go`)
+
 ```go
 package application
 
@@ -180,6 +188,7 @@ func (s *Service) List(ctx context.Context) ([]IssueSummary, error) {
 ```
 
 ## 6. Ports (`internal/ports/repository.go`)
+
 ```go
 package ports
 
@@ -192,6 +201,7 @@ type EventStore interface {
 ```
 
 ## 7. Git Adapter (`internal/adapters/gitstore/git_store.go`)
+
 ```go
 package gitstore
 
@@ -215,6 +225,7 @@ func (s *Store) AppendEvent(ctx context.Context, evt domain.Event) (string, erro
 ```
 
 ## 8. TUI Wiring (`internal/ui/tui/model.go`)
+
 ```go
 package tui
 
@@ -251,6 +262,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 ```
 
 ## 9. Next Steps
+
 - Flesh out unit tests for domain replay and adapters.
 - Expand the Git adapter with catalog and feed updates.
 - Integrate TUI commands with mutation operations (`CreateIssue`, `ChangeStatus`, `Comment`).
