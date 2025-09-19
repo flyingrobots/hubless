@@ -10,7 +10,7 @@ Thanks for building Hubless! This document summarizes how we collaborate. For th
 
 ## Task Workflow
 
-1. Add or pick up a task in `@hubless/issues/tasks.md` and set status to `PLANNED`.
+1. Add or pick up a task in `@hubless/issues/tasks/*.json` (the table in `@hubless/issues/generated/tasks.md` is generated) and set status to `PLANNED`.
 2. When you begin work, flip status to `STARTED` and link the task ID in your branch, PR, and commit messages.
 3. Blocked tasks move to `BLOCKED` with context on what’s needed.
 4. When finished, mark as `DONE` and ensure it carries the badges **Tested**, **Documented**, **Shipped**.
@@ -38,6 +38,15 @@ Thanks for building Hubless! This document summarizes how we collaborate. For th
 3. Build features through application services so both CLI and TUI can reuse logic.
 4. Write tests alongside features. Unit test domain logic, adapters, and Bubbletea models.
 5. Run `go fmt`, `go vet`, and any configured linters before opening a PR.
+
+## Documentation Automation
+
+- Structured data under `@hubless/` now feeds Markdown via reusable snippets in `docs/components/`.
+- Install or clone [`markdown-transclusion`](https://github.com/flyingrobots/markdown-transclusion) (Node ≥20). Set `MARKDOWN_TRANSCLUSION_BIN` to the executable (`markdown-transclusion` if installed globally, or `node`) and `MARKDOWN_TRANSCLUSION_ARGS` to the CLI script path when using a local clone (e.g., `/path/to/markdown-transclusion/dist/cli.js`).
+- Run `make docs` (or `./scripts/render-docs.sh`) after editing JSON records or templates. This regenerates shared snippets and rewrites `@hubless/roadmap/generated/README.md` and `@hubless/issues/generated/tasks.md` from their templates.
+- Run `make docs-test` to execute generator unit tests and ensure snippets format as expected.
+- For custom dependency graph styling, pass `--graph-direction`, `--graph-clusters`, or `--graph-palette` to `cmd/docs-components` (see `README.md`).
+- `CHANGELOG.md` is generated from `CHANGELOG.template.md` and `docs/reference/release-notes.*`; edit the template or JSON, not the generated file.
 
 ## Commit & PR Guidance
 

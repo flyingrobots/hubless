@@ -45,6 +45,29 @@ The legacy Python script has been replaced with the Go implementation (spec docu
 - `AGENTS.md` – Workflow rules, coding standards, collaboration notes.
 - `@hubless/` – Structured planning data (tasks, stories, features, milestones schemas).
 
+### Documentation Pipeline
+
+Reusable Markdown snippets live under `docs/components/` and are rendered with the [`markdown-transclusion`](https://github.com/flyingrobots/markdown-transclusion) CLI. After editing JSON records or templates, regenerate the docs with:
+
+```bash
+# Ensure MARKDOWN_TRANSCLUSION_BIN (and optional MARKDOWN_TRANSCLUSION_ARGS) point to the CLI
+make docs
+# Validate generator output without rebuilding full docs
+make docs-test
+```
+
+Dependency graph styling can be tweaked on demand:
+
+```bash
+go run ./cmd/docs-components --graph-direction TB --graph-clusters --graph-palette evergreen
+go run ./cmd/docs-components --graph-palette infrared
+go run ./cmd/docs-components --graph-palette zerothrow
+```
+
+Running `make docs` also refreshes `docs/reference/release-notes.md` and the root `CHANGELOG.md`, keeping release collateral in lockstep with the planning JSON.
+
+This refreshes tables for `@hubless/roadmap/generated/README.md` and `@hubless/issues/generated/tasks.md`; other docs can pull in the same snippets with `![[…]]` references.
+
 ## Development Principles
 
 - Git is the source of truth; no central server required.

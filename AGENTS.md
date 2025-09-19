@@ -1,16 +1,16 @@
 ## Workflow
 
-- Tasks live in @hubless/issues/tasks.md
+- Tasks data lives in `@hubless/issues/tasks/*.json`; the generated rollup sits at `@hubless/issues/generated/tasks.md`.
 - Try to associate all work with a task id
 - Maintain task dependencies so we have an accurate DAG; update `@hubless/issues/tasks/` whenever prerequisites change. This DAG will drive the rolling frontier worker pool.
   - Tasks are defined as JSON files under `@hubless/issues/tasks/` matching the schema in `@hubless/schema/task.schema.json`; IDs follow `{project}/{milestone}/{type}/{number}` (e.g., `hubless/m0/task/0001`).
 - Follow the Task lifecycle:
 
-1. Task added to @hubless/issues/tasks.md; status = "PLANNED"
+1. Task added to `@hubless/issues/tasks/<id>.json`; the generated rollup (`@hubless/issues/generated/tasks.md`) should show it as `PLANNED` after regeneration.
 2. Start task? status = "STARTED"
 3. Task blocked? status = "BLOCKED"
 4. Task finished? status = "DONE"
-5. Once status = "DONE", Tasks need the following badges: (i) Tested (ii) Documented (iii) Shipped; only then shall we remove them from the tasks.md file, and add it to the "tasks.archive.md" file
+5. Once status = "DONE", Tasks need the following badges: (i) Tested (ii) Documented (iii) Shipped; only then shall we remove them from the tasks.md file, and add it to the "tasks.archive.md" file. Running `make docs` also refreshes the root `CHANGELOG.md` and release notes from the JSON sources.
 
 - NEVER GIT AMEND; just make a new commit.
 - NEVER REBASE; just git merge. Embrace the messy history–the truth shall set you free.

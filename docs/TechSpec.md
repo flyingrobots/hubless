@@ -221,6 +221,22 @@ Configure remotes to fetch/push Hubless refs:
 - Provide `hubless doctor` to verify ref health, snapshot freshness, and remote configuration.
 - Document backup strategy: repository cloning suffices; snapshots ensure quick restore.
 
+### 10.1 Live Snapshot
+
+Operational rollups derived from the structured planning data keep this spec anchored to the live backlog:
+
+![[docs/components/roadmap/progress.md]]
+
+![[docs/components/roadmap/dependencies-graph.md]]
+
+![[docs/components/issues/status-summary.md]]
+
+### 10.2 Recently Completed
+
+Up-to-date archive gleaned from structured data:
+
+![[docs/components/issues/archived-tasks.md]]
+
 ## 11. Risks and Mitigations
 
 | Risk | Mitigation |
