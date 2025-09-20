@@ -412,7 +412,13 @@ func (g *Generator) generateDependencyGraph(ctx context.Context, data roadmapArt
 	if palette == nil {
 		palette = g.palettes["evergreen"]
 	}
-	for className, color := range palette {
+	classNames := make([]string, 0, len(palette))
+	for className := range palette {
+		classNames = append(classNames, className)
+	}
+	sort.Strings(classNames)
+	for _, className := range classNames {
+		color := palette[className]
 		fmt.Fprintf(builder, "    classDef %s fill:%s,stroke:%s,color:%s,stroke-width:1px;\n", className, color.Fill, color.Stroke, color.Text)
 	}
 

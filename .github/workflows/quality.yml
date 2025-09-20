@@ -20,6 +20,9 @@ jobs:
         with:
           go-version: '1.25'
 
+      - name: Install markdown-transclusion
+        run: npm install -g markdown-transclusion
+
       - name: gofmt check
         run: make fmt-check
 
@@ -31,3 +34,12 @@ jobs:
 
       - name: Go tests
         run: make test
+
+      - name: Generate docs
+        run: make docs
+
+      - name: Verify docs
+        run: make docs-verify
+
+      - name: Ensure docs committed
+        run: git diff --stat --exit-code

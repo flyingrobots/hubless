@@ -1,10 +1,13 @@
-.PHONY: docs docs-components docs-test fmt fmt-check lint test hooks release-docs
+.PHONY: docs docs-components docs-test docs-verify fmt fmt-check lint test hooks release-docs
 
 docs docs-components release-docs:
 	./scripts/render-docs.sh
 
 docs-test:
 	go test ./internal/docscomponents
+
+docs-verify:
+	./scripts/verify-docs.sh
 
 fmt:
 	find . -name '*.go' -not -path './vendor/*' -not -path './.git/*' -print0 | xargs -0 gofmt -w

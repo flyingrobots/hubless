@@ -59,6 +59,11 @@
    - `--graph-clusters` groups nodes by type using Mermaid subgraphs.
    - `--graph-palette` selects a Mermaid color palette (`evergreen`, `infrared`, `zerothrow`, or any palette declared in `docs/reference/palettes.json`).
    - `--palette-file` points to an alternate palette JSON document (defaults to `docs/reference/palettes.json`).
+4. Validate outputs:
+   ```bash
+   make docs-test     # generator unit tests
+   make docs-verify   # ensure transclusions fully resolved
+   ```
 
 ## Verification
 - `go test ./internal/docscomponents` exercises the generator (fixtures & formatting guards).
