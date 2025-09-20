@@ -32,6 +32,8 @@ jobs:
           version: v1.59.1
           install-mode: binary
           args: ./...
+        env:
+          GOTOOLCHAIN: go1.22.7
 
       - name: Go tests
         run: make test
