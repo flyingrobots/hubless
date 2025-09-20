@@ -1,96 +1,50 @@
 # Hubless
 
-Hubless is a terminal-native, Git-backed work tracker. It treats issues, pull requests, and boards as append-only event streams under `refs/hubless/**`, then presents them through a Charmbracelet-powered TUI and CLI. This repository houses the specs, tooling, and implementation that turn Git repositories into fully auditable planning systems.
+> *Imagine GitHub… but in your repo. No hub; just Git.*
 
-## Getting Started
+> [!INFO]  
+> **EARLY DAYS.** I just started this project yesterday. Expect rapid iteration, rough edges, and breaking changes.  
+> If you want boring stability, wait. If you want to see Git-native project state come alive, jump in now.
 
-> **Status:** Early development. Specs are in place; implementation is in progress.
+---
 
-### Prerequisites
+## Why Hubless?
 
-- Go 1.22+
-- Git 2.30+
-- Optional: [gh](https://github.com/cli/cli) for GitHub integration experiments
+> _Art doesn’t need to be explained; its purpose is to create a new reality as powerful and engaging as the one we live in._
 
-### Clone
+### **Hubless = Freedom**
 
-```bash
-git clone https://github.com/flyingrobots/hubless.git
-cd hubless
-```
+Keep your entire project in your repo. No SaaS lock-in. Offline-first. Fast. Minimalist. Deeply integrated.  
+Web frontend optional (for PMs or when you’re on the go), but developers live in Git.
 
-### Build the utilities
+### The Vision
 
-The Go module is initialized but the primary CLI is still under construction. A helper binary for progress updates exists today:
+- **Git-native issues, boards, and execution.**  
+  Every change is a commit. No website required.  
 
-```bash
-go build ./cmd/update-progress
-```
+- **Conflict-free by design.**  
+  CRDT event streams, snapshots, and catalogs keep state boringly coherent.  
 
-### Run the progress updater
+- **Auditable forever.**  
+  Undo = append-only. No rewrites, no drift.  
 
-The legacy Python script has been replaced with the Go implementation (spec documented in `docs/reference/update-progress-algorithm.md`). Point the tool at your `git-mind` checkout once the Go port is finished.
+- **Sort of like Magit, but for project flow.**  
+  Fast TUI, consistent keystrokes, muscle-memory ergonomics.  
 
-```bash
-./update-progress --root ../git-mind
-```
+- **Optional Play button.**  
+  Don’t just track issues — press ▶ to execute DAG-style tasks automatically.
 
-## Project Docs
-
-- `docs/PRD.md` – Product requirements and roadmap.
-- `docs/TechSpec.md` – Architecture, data model, sync contracts.
-- `docs/design/tui.md` – Bubbletea TUI views, interactions, styling.
-- `docs/reference/implementation-skeleton.md` – Hexagonal layout and scaffolding.
-- `docs/reference/update-progress-algorithm.md` – Transcription of the ledger updater logic.
-- `docs/reference/archive-structure.md` – How archives feed generated docs and changelog outputs.
-- `docs/reference/rfcs/` – Accepted/ongoing RFCs (e.g., `0001-release-automation.md`).
-- `AGENTS.md` – Workflow rules, coding standards, collaboration notes.
-- `@hubless/` – Structured planning data (tasks, stories, features, milestones schemas).
-
-### Documentation Pipeline
-
-Reusable Markdown snippets live under `docs/components/` and are rendered with the [`markdown-transclusion`](https://github.com/flyingrobots/markdown-transclusion) CLI. After editing JSON records or templates, regenerate the docs with:
-
-```bash
-# Ensure MARKDOWN_TRANSCLUSION_BIN (and optional MARKDOWN_TRANSCLUSION_ARGS) point to the CLI
-make docs
-# Validate generator output without rebuilding full docs
-make docs-test
-```
-
-Dependency graph styling can be tweaked on demand:
-
-```bash
-go run ./cmd/docs-components --graph-direction TB --graph-clusters --graph-palette evergreen
-go run ./cmd/docs-components --graph-palette infrared
-go run ./cmd/docs-components --graph-palette zerothrow
-go run ./cmd/docs-components --graph-palette quantum --palette-file docs/reference/palettes.json
-```
-
-Running `make docs` also refreshes `docs/reference/release-notes.md` and the root `CHANGELOG.md`, keeping release collateral in lockstep with the planning JSON.
-
-### Development Workflow Helpers
-
-```bash
-make fmt          # gofmt over the module
-make lint         # golangci-lint run ./...
-make test         # go test ./...
-make hooks        # install local git hooks (fmt/lint/test/docs before commit)
-```
-
-This refreshes tables for `@hubless/roadmap/generated/README.md` and `@hubless/issues/generated/tasks.md`; other docs can pull in the same snippets with `![[…]]` references.
-
-## Development Principles
-
-- Git is the source of truth; no central server required.
-- Conflict-free, append-only event streams for issues, boards, and PRs.
-- Hexagonal architecture with Go application services, Git adapters, and Charmbracelet UI layers.
-- CLI command surface will use Charmbracelet Fang/Cobra to keep styling consistent with the TUI.
-
-## Contributing
-
-See `CONTRIBUTING.md` for task workflow, branching rules, and code quality expectations.
-
-## License
-
-This project is licensed under the MIT License – see `LICENSE` for details.
+- **Boring stuff just happens.**  
+  **Old way:** 
+    ticket → 
+    website →  
+    bookkeeping →  
+    copy-paste →  
+    PR.    
+  **New way:**  
+  ```bash
+  git hubless start issue 34
+  # branch created, issue assigned, kanban updated, draft PR opened
+  ...
+  git hubless submit issue 34
+  # PR updated, undrafted, review requested
