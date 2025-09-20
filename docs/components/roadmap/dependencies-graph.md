@@ -27,10 +27,10 @@ graph LR
     n7["Feature\\nEvent store and CLI foundations"]
     n8["Feature\\nRobust Git synchronization"]
     n9["Feature\\nGitHub projection integration"]
+    classDef task fill:#C86E3B,stroke:#2C5F2D,color:#F4F1E8,stroke-width:1px;
     classDef milestone fill:#2C5F2D,stroke:#C86E3B,color:#F4F1E8,stroke-width:1px;
     classDef feature fill:#6B9F7F,stroke:#2C5F2D,color:#F4F1E8,stroke-width:1px;
     classDef story fill:#E9B872,stroke:#C86E3B,color:#0E1111,stroke-width:1px;
-    classDef task fill:#C86E3B,stroke:#2C5F2D,color:#F4F1E8,stroke-width:1px;
     class n0 milestone;
     class n1 milestone;
     class n10 feature;
