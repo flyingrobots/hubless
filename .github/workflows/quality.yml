@@ -30,7 +30,7 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.59.1
-          skip-go-installation: true
+          install-mode: binary
           args: ./...
 
       - name: Go tests
