@@ -11,6 +11,17 @@ import (
 	"github.com/flyingrobots/hubless/internal/release"
 )
 
+// main is the entry point for the hubless release CLI.
+// 
+// It parses command-line flags to configure a release and invokes the releaser:
+// - repo: repository root (default ".")
+// - version: version to tag (required)
+// - notes: path to release notes markdown (default "docs/reference/release-notes.md")
+// - dry-run: show actions without creating a tag
+// - skip-checks: skip fmt/lint/test/docs before tagging
+//
+// If --version is omitted the program prints a short message, shows usage and exits with code 2.
+// Any other initialization or run error is logged and the program exits non‑zero.
 func main() {
 	log.SetFlags(0)
 	log.SetPrefix("hubless-release: ")

@@ -56,7 +56,9 @@ type StatusSection struct {
 	Counter int
 }
 
-// MockCatalog returns sample issues for list/detail wireframes.
+// MockCatalog returns a slice of sample Issue values used by list/detail wireframes.
+// The provided now time is used to compute LastUpdated, Comment.CreatedAt, and TimelineEvent.Timestamp
+// so callers can control the generated timestamps.
 func MockCatalog(now time.Time) []Issue {
 	return []Issue{
 		{
@@ -110,7 +112,13 @@ func MockCatalog(now time.Time) []Issue {
 	}
 }
 
-// MockStatusSections returns the data driving the home buffer sections.
+// MockStatusSections returns sample status sections used by the home buffer view.
+// 
+// It produces four static sections — "Focus", "Inbox", "Boards", and "Saved Filters" —
+// each with example items, a short hint for keyboard interaction, and a counter.
+//
+// The `now` parameter is accepted for API consistency with other mock factories but is
+// not used to compute the returned data.
 func MockStatusSections(now time.Time) []StatusSection {
 	return []StatusSection{
 		{
@@ -140,7 +148,11 @@ func MockStatusSections(now time.Time) []StatusSection {
 	}
 }
 
-// MockBoard returns fake kanban columns for the kanban view.
+// MockBoard returns a deterministic set of sample Kanban columns and cards used by mock UI flows.
+// 
+// The returned slice contains three columns ("Open", "In Progress", "Review") populated with
+// BoardCard entries (ID, Title, Assignee, Priority). Intended for development and testing of
+// Kanban/board views—not for production data.
 func MockBoard() []BoardColumn {
 	return []BoardColumn{
 		{

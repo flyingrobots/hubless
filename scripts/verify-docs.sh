@@ -12,6 +12,7 @@ TARGETS=(
 missing=()
 failures=()
 
+# contains_placeholder returns 0 if the specified file contains an unresolved placeholder of the form `![[...]]`; otherwise returns 1.
 contains_placeholder() {
   local file="$1"
   if rg -n "!\\[\\[[^]]+\\]\\]" "$file" >/dev/null; then
