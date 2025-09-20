@@ -25,6 +25,10 @@ type Releaser struct {
 	repoRoot string
 }
 
+// New returns a Releaser for the repository located at repoRoot.
+// repoRoot must be a non-empty path; it may be relative and will be resolved
+// to an absolute path. Returns an error if repoRoot is empty or the path
+// cannot be resolved.
 func New(repoRoot string) (*Releaser, error) {
 	if repoRoot == "" {
 		return nil, errors.New("repo root is required")
@@ -163,6 +167,9 @@ func (r *Releaser) capture(ctx context.Context, name string, args ...string) (st
 	return string(output), err
 }
 
+// normalizeVersion trims whitespace from v and ensures it begins with a "v".
+// If the trimmed version is empty it is returned unchanged; otherwise, a
+// leading "v" is added when missing (e.g. "1.2.3" -> "v1.2.3").
 func normalizeVersion(version string) string {
 	version = strings.TrimSpace(version)
 	if version == "" {

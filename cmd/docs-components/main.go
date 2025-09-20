@@ -21,6 +21,17 @@ func (s *stringSliceFlag) Set(value string) error {
 	return nil
 }
 
+// main is the CLI entrypoint for generating documentation components and optionally
+// rendering documentation templates via the markdown-transclusion tool.
+//
+// It parses command-line flags to configure repository and output paths, generator
+// options (graph direction, clusters, palette and palette file), and transclusion
+// settings (binary, base path, and additional args). It constructs a docs
+// generator, runs component generation, and—unless -skip-transclusion is set—resolves
+// the transclusion binary and arguments (from flags or MARKDOWN_TRANSCLUSION_* env
+// vars) and invokes markdown-transclusion to render a set of templates to their
+// configured outputs. Any initialization, generation, or rendering error causes the
+// program to log a fatal error and exit.
 func main() {
 	log.SetFlags(0)
 	log.SetPrefix("docs-components: ")
@@ -138,6 +149,9 @@ func main() {
 	}
 }
 
+// parseArgs splits raw into whitespace-separated fields (using strings.Fields)
+// and returns a newly allocated slice containing those fields. An empty or
+// all-whitespace input yields an empty slice.
 func parseArgs(raw string) []string {
 	fields := strings.Fields(raw)
 	return append([]string(nil), fields...)
