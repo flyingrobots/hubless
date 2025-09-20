@@ -1,8 +1,6 @@
 run:
   timeout: 5m
   tests: true
-  gofmt: false
-
 linters:
   enable:
     - govet
@@ -10,7 +8,9 @@ linters:
     - gofmt
     - goimports
     - revive
-
+    - errcheck
+    - ineffassign
+    - gosec
 issues:
   exclude-use-default: false
 

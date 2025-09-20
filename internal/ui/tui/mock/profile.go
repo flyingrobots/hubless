@@ -17,6 +17,7 @@ func (p layoutProfile) Name() string {
 // profileForWidth returns the responsive layoutProfile for the given width.
 // It maps widths < 100 to the "sm" (small) profile, widths >= 100 and < 140 to
 // the "md" (medium) profile, and widths >= 140 to the "lg" (large) profile.
+// layoutProfile encapsulates responsive settings derived from Stickers breakpoints (in terminal columns).
 func profileForWidth(width int) layoutProfile {
 	switch {
 	case width < 100:
@@ -26,4 +27,5 @@ func profileForWidth(width int) layoutProfile {
 	default:
 		return layoutProfile{id: "lg", name: "large"}
 	}
+}
 }

@@ -1062,6 +1062,15 @@ func (g *Generator) generateChangelog(ctx context.Context, records []recordWithP
 	if len(done) == 0 {
 		builder.WriteString("_No completed tasks yet._\n")
 	} else {
+		sort.Slice(done, func(i, j int) bool {
+			ti := parseTimestamp(derefString(done[i].data.UpdatedAt))
+			tj := parseTimestamp(derefString(done[j].data.UpdatedAt))
+			if !ti.Equal(tj) {
+				return ti.After(tj)
+			}
+			return done[i].data.ID < done[j].data.ID
+		})
+
 		for _, record := range done {
 			date := derefString(record.data.UpdatedAt)
 			if strings.TrimSpace(date) == "" {
@@ -1090,6 +1099,43 @@ func (g *Generator) generateChangelog(ctx context.Context, records []recordWithP
 	}
 
 	return nil
+}
+
+func parseTimestamp(s string) time.Time {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return time.Time{}
+	}
+	// Try common formats (include non-padded and zero-padded forms)
+	layouts := []string{
+		time.RFC3339,
+		"2006-1-2 15:04:05",
+		"2006-1-2 15:04",
+		"2006-1-2",
+		"2006-01-02 15:04:05",
+		"2006-01-02 15:04",
+		"2006-01-02",
+	}
+	for _, layout := range layouts {
+		if t, err := time.Parse(layout, s); err == nil {
+			return t
+		}
+	}
+	// Fallback: normalize YYYY-M-D by parsing numeric month/day and zero-padding
+	parts := strings.Split(s, "-")
+	if len(parts) == 3 {
+		y := strings.TrimSpace(parts[0])
+		mStr := strings.TrimSpace(parts[1])
+		dStr := strings.TrimSpace(parts[2])
+		if mi, err1 := strconv.Atoi(mStr); err1 == nil {
+			if di, err2 := strconv.Atoi(dStr); err2 == nil {
+				if t, err := time.Parse("2006-01-02", fmt.Sprintf("%s-%02d-%02d", y, mi, di)); err == nil {
+					return t
+				}
+			}
+		}
+	}
+	return time.Time{}
 }
 
 func (g *Generator) writeFile(destPath, contents string) error {

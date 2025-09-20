@@ -10,7 +10,7 @@
 2. Start task? status = "STARTED"
 3. Task blocked? status = "BLOCKED"
 4. Task finished? status = "DONE"
-5. Once status = "DONE", Tasks need the following badges: (i) Tested (ii) Documented (iii) Shipped; only then shall we remove them from the tasks.md file, and add it to the "tasks.archive.md" file. Running `make docs` also refreshes the root `CHANGELOG.md` and release notes from the JSON sources.
+5. Once status = "DONE" with badges (i) Tested (ii) Documented (iii) Shipped, the generator removes the item from the tasks rollup and adds it to the archive automatically on `make docs`. This also refreshes `CHANGELOG.md` and release notes.
 
 - NEVER GIT AMEND; just make a new commit.
 - NEVER REBASE; just git merge. Embrace the messy history–the truth shall set you free.

@@ -77,6 +77,10 @@ func (r *Releaser) Run(ctx context.Context, opts Options) error {
 	if opts.DryRun {
 		fmt.Printf("[dry-run] Ready to tag %s using notes from %s\n", version, notesPath)
 		fmt.Printf("[dry-run] Tag message preview:\n%s\n", trimmedNotes)
+		fmt.Println("[dry-run] Next steps:")
+		fmt.Printf("  git tag -a %s -F <notes>\n", version)
+		fmt.Printf("  git push origin %s\n", version)
+		fmt.Println("  Optionally: gh release create", version, "-F", notesPath)
 		return nil
 	}
 
@@ -131,7 +135,7 @@ func (r *Releaser) runChecks(ctx context.Context) error {
 }
 
 func (r *Releaser) ensureClean(ctx context.Context) error {
-	output, err := r.capture(ctx, "git", "status", "--porcelain")
+	output, err := r.capture(ctx, "git", "status", "--porcelain=v1", "--untracked-files=no")
 	if err != nil {
 		return fmt.Errorf("git status: %w", err)
 	}
@@ -142,6 +146,9 @@ func (r *Releaser) ensureClean(ctx context.Context) error {
 }
 
 func (r *Releaser) ensureTagDoesNotExist(ctx context.Context, version string) error {
+	if err := r.runCommand(ctx, "git", "fetch", "--tags", "--prune", "--quiet"); err != nil {
+		return fmt.Errorf("fetch tags: %w", err)
+	}
 	output, err := r.capture(ctx, "git", "tag", "--list", version)
 	if err != nil {
 		return fmt.Errorf("check existing tags: %w", err)
@@ -175,8 +182,6 @@ func normalizeVersion(version string) string {
 	if version == "" {
 		return version
 	}
-	if !strings.HasPrefix(version, "v") {
-		return "v" + version
-	}
-	return version
+	version = strings.TrimLeft(version, "vV")
+	return "v" + version
 }

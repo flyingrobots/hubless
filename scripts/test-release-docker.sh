@@ -7,10 +7,11 @@ VERSION="0.0.1"
 
 cd "$ROOT_DIR"
 
-docker build -f Dockerfile.release-test -t "$IMAGE_NAME" .
+docker build --pull -f Dockerfile.release-test -t "$IMAGE_NAME" .
 
 docker run --rm "$IMAGE_NAME" /bin/bash -lc "\
   export PATH=/usr/local/go/bin:/go/bin:\$PATH && \
+  set -x && \
   cd /app && \
   git remote -v && \
   go run ./cmd/release --version $VERSION --dry-run --skip-checks && \

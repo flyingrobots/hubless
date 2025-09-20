@@ -9,5 +9,9 @@ if [ ! -d "$HOOK_DIR" ]; then
   exit 1
 fi
 
-git config core.hooksPath "$HOOK_DIR"
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo "Not inside a git repository" >&2
+  exit 1
+fi
+git config --local core.hooksPath "$HOOK_DIR"
 echo "Git hooks path set to $HOOK_DIR"

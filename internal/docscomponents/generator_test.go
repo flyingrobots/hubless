@@ -159,16 +159,17 @@ func TestGeneratorGenerateCustomGraphOptions(t *testing.T) {
 		t.Fatalf("Generate: %v", err)
 	}
 
-	graph := readFile(t, filepath.Join(componentsDir, "roadmap", "dependencies-graph.md"))
-	if !strings.Contains(graph, "graph TB") {
-		t.Fatalf("expected dependency graph to honour direction TB, got:\n%s", graph)
-	}
-	if !strings.Contains(strings.ToLower(graph), "subgraph feature") {
-		t.Fatalf("expected dependency graph to include clusters, got:\n%s", graph)
-	}
-	if !strings.Contains(graph, "classDef milestone fill:#1A1C23") {
-		t.Fatalf("expected infrared palette colors in graph, got:\n%s", graph)
-	}
+graph := readFile(t, filepath.Join(componentsDir, "roadmap", "dependencies-graph.md"))
+if !strings.Contains(graph, "graph TB") {
+	t.Fatalf("expected dependency graph to honour direction TB, got:\n%s", graph)
+}
+if !strings.Contains(strings.ToLower(graph), "subgraph feature") {
+	t.Fatalf("expected dependency graph to include clusters, got:\n%s", graph)
+}
+if !strings.Contains(strings.ToLower(strings.ReplaceAll(graph, " ", "")),
+	"classdefmilestonefill:#1a1c23") {
+	t.Fatalf("expected infrared palette colors in graph, got:\n%s", graph)
+}
 }
 
 func TestGeneratorPaletteFile(t *testing.T) {
@@ -227,7 +228,9 @@ func TestGeneratorPaletteFile(t *testing.T) {
 	}
 
 	graph := readFile(t, filepath.Join(componentsDir, "roadmap", "dependencies-graph.md"))
-	if !strings.Contains(graph, "classDef milestone fill:#123456") {
+	if !(strings.Contains(graph, "classDef milestone fill:#123456") &&
+	     strings.Contains(graph, "classDef milestone stroke:#654321") &&
+	     strings.Contains(graph, "classDef milestone color:#FFFFFF")) {
 		t.Fatalf("expected custom palette colors in graph, got:\n%s", graph)
 	}
 }
