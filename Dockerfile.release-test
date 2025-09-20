@@ -1,0 +1,25 @@
+FROM golang:1.25
+
+ENV PATH="/usr/local/go/bin:/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    nodejs \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g markdown-transclusion
+
+WORKDIR /app
+COPY . /app
+
+RUN rm -rf .git && \
+    git init && \
+    git config user.name "Release Tester" && \
+    git config user.email "tester@example.com" && \
+    git add . && \
+    git commit -m "container snapshot" && \
+    git remote remove origin || true
+
+CMD ["/bin/bash"]

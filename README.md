@@ -42,6 +42,8 @@ The legacy Python script has been replaced with the Go implementation (spec docu
 - `docs/design/tui.md` – Bubbletea TUI views, interactions, styling.
 - `docs/reference/implementation-skeleton.md` – Hexagonal layout and scaffolding.
 - `docs/reference/update-progress-algorithm.md` – Transcription of the ledger updater logic.
+- `docs/reference/archive-structure.md` – How archives feed generated docs and changelog outputs.
+- `docs/reference/rfcs/` – Accepted/ongoing RFCs (e.g., `0001-release-automation.md`).
 - `AGENTS.md` – Workflow rules, coding standards, collaboration notes.
 - `@hubless/` – Structured planning data (tasks, stories, features, milestones schemas).
 
@@ -62,9 +64,19 @@ Dependency graph styling can be tweaked on demand:
 go run ./cmd/docs-components --graph-direction TB --graph-clusters --graph-palette evergreen
 go run ./cmd/docs-components --graph-palette infrared
 go run ./cmd/docs-components --graph-palette zerothrow
+go run ./cmd/docs-components --graph-palette quantum --palette-file docs/reference/palettes.json
 ```
 
 Running `make docs` also refreshes `docs/reference/release-notes.md` and the root `CHANGELOG.md`, keeping release collateral in lockstep with the planning JSON.
+
+### Development Workflow Helpers
+
+```bash
+make fmt          # gofmt over the module
+make lint         # golangci-lint run ./...
+make test         # go test ./...
+make hooks        # install local git hooks (fmt/lint/test/docs before commit)
+```
 
 This refreshes tables for `@hubless/roadmap/generated/README.md` and `@hubless/issues/generated/tasks.md`; other docs can pull in the same snippets with `![[…]]` references.
 

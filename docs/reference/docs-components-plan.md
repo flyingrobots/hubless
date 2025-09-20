@@ -31,7 +31,9 @@
   - `issues/archived-stories.md`, `issues/archived-tasks.md` – completed work rollups feeding the archive template.
   - `@hubless/issues/templates/archive.md` / `generated/archive.md` – archive overview assembled from the archived snippets.
   - `issues/changelog.md` – release-ready bullet list of completed tasks (consumed by `docs/reference/release-notes.*`).
-  - `docs/reference/release-notes.template.md` / `docs/reference/release-notes.md` – generated release notes ready to drop into changelog entries.
+- `docs/reference/release-notes.template.md` / `docs/reference/release-notes.md` – generated release notes ready to drop into changelog entries.
+- `docs/reference/palettes.json` (+ `docs/reference/palettes.schema.json`) – optional custom palette definitions merged with built-ins.
+  - See `docs/reference/archive-structure.md` for a deeper explanation of archive/changelog relationships.
   - Downstream docs (PRD §9.2, TechSpec §10.2) embed the archived task rollup directly.
 
 ## Running the Pipeline
@@ -55,7 +57,8 @@
    Useful CLI flags:
    - `--graph-direction` (LR/RL/TB/BT) tunes the dependency graph orientation.
    - `--graph-clusters` groups nodes by type using Mermaid subgraphs.
-   - `--graph-palette` selects a Mermaid color palette (`evergreen`, `infrared`, `zerothrow`).
+   - `--graph-palette` selects a Mermaid color palette (`evergreen`, `infrared`, `zerothrow`, or any palette declared in `docs/reference/palettes.json`).
+   - `--palette-file` points to an alternate palette JSON document (defaults to `docs/reference/palettes.json`).
 
 ## Verification
 - `go test ./internal/docscomponents` exercises the generator (fixtures & formatting guards).

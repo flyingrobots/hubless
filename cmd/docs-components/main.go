@@ -44,6 +44,7 @@ func main() {
 		graphDirection    string
 		graphClusters     bool
 		graphPalette      string
+		paletteFile       string
 		transclusionArgs  stringSliceFlag
 	)
 
@@ -65,6 +66,7 @@ func main() {
 	flag.StringVar(&graphDirection, "graph-direction", "LR", "Direction for Mermaid dependency graph (LR, RL, TB, BT)")
 	flag.BoolVar(&graphClusters, "graph-clusters", false, "Group dependency graph nodes by type using Mermaid subgraphs")
 	flag.StringVar(&graphPalette, "graph-palette", "evergreen", "Mermaid palette for dependency graph (evergreen, infrared, zerothrow)")
+	flag.StringVar(&paletteFile, "palette-file", "docs/reference/palettes.json", "Optional palette definition file (JSON)")
 	flag.Var(&transclusionArgs, "transclusion-args", "Additional argument passed to markdown-transclusion (repeatable)")
 	flag.Parse()
 
@@ -74,6 +76,7 @@ func main() {
 		GraphDirection: graphDirection,
 		GraphClusters:  graphClusters,
 		GraphPalette:   graphPalette,
+		PaletteFile:    paletteFile,
 	})
 	if err != nil {
 		log.Fatalf("initialise generator: %v", err)

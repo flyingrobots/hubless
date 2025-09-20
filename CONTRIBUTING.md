@@ -47,6 +47,15 @@ Thanks for building Hubless! This document summarizes how we collaborate. For th
 - Run `make docs-test` to execute generator unit tests and ensure snippets format as expected.
 - For custom dependency graph styling, pass `--graph-direction`, `--graph-clusters`, or `--graph-palette` to `cmd/docs-components` (see `README.md`).
 - `CHANGELOG.md` is generated from `CHANGELOG.template.md` and `docs/reference/release-notes.*`; edit the template or JSON, not the generated file.
+- Palette overrides live in `docs/reference/palettes.json` (validated by `docs/reference/palettes.schema.json`); point `--palette-file` elsewhere if you keep custom palettes in another location.
+- Install [`golangci-lint`](https://golangci-lint.run/) locally so `make lint` and the pre-commit hook can execute successfully.
+
+## Tooling & Hooks
+
+- Run `make fmt`, `make lint`, and `make test` before opening a PR. CI expects them to pass.
+- Install local git hooks via `make hooks` (wraps `scripts/install-git-hooks.sh`) so pre-commit checks run automatically.
+- `.golangci.yml` houses lint configuration; feel free to propose tweaks but keep the suite running clean.
+- `.editorconfig` defines base formatting (tabs for Makefiles, spaces elsewhere).
 
 ## Commit & PR Guidance
 

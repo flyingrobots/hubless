@@ -171,6 +171,67 @@ func TestGeneratorGenerateCustomGraphOptions(t *testing.T) {
 	}
 }
 
+func TestGeneratorPaletteFile(t *testing.T) {
+	t.Parallel()
+
+	repoRoot := t.TempDir()
+
+	palettePath := filepath.Join(repoRoot, "palettes.json")
+	writeJSON(t, palettePath, map[string]any{
+		"custom": map[string]any{
+			"milestone": map[string]string{"fill": "#123456", "stroke": "#654321", "text": "#FFFFFF"},
+			"feature":   map[string]string{"fill": "#abcdef", "stroke": "#fedcba", "text": "#000000"},
+			"story":     map[string]string{"fill": "#111111", "stroke": "#222222", "text": "#EEEEEE"},
+			"task":      map[string]string{"fill": "#333333", "stroke": "#444444", "text": "#DDDDDD"},
+		},
+	})
+
+	writeJSON(t, filepath.Join(repoRoot, "@hubless", "roadmap", "milestones", "m.json"), map[string]any{
+		"id":     "custom/milestone",
+		"title":  "Custom Milestone",
+		"status": "DONE",
+	})
+
+	writeJSON(t, filepath.Join(repoRoot, "@hubless", "roadmap", "features", "f.json"), map[string]any{
+		"id":           "custom/feature",
+		"title":        "Custom Feature",
+		"status":       "DONE",
+		"dependencies": []any{"custom/milestone"},
+	})
+
+	writeJSON(t, filepath.Join(repoRoot, "@hubless", "issues", "stories", "s.json"), map[string]any{
+		"id":           "custom/story",
+		"title":        "Custom Story",
+		"status":       "DONE",
+		"dependencies": []any{"custom/feature"},
+	})
+
+	writeJSON(t, filepath.Join(repoRoot, "@hubless", "issues", "tasks", "t.json"), map[string]any{
+		"id":           "custom/task",
+		"title":        "Custom Task",
+		"status":       "DONE",
+		"dependencies": []any{"custom/story"},
+	})
+
+	componentsDir := filepath.Join(repoRoot, "docs", "components")
+	gen, err := docscomponents.NewGenerator(repoRoot, componentsDir, docscomponents.GeneratorOptions{
+		GraphPalette: "custom",
+		PaletteFile:  "palettes.json",
+	})
+	if err != nil {
+		t.Fatalf("NewGenerator: %v", err)
+	}
+
+	if err := gen.Generate(context.Background()); err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+
+	graph := readFile(t, filepath.Join(componentsDir, "roadmap", "dependencies-graph.md"))
+	if !strings.Contains(graph, "classDef milestone fill:#123456") {
+		t.Fatalf("expected custom palette colors in graph, got:\n%s", graph)
+	}
+}
+
 func writeJSON(t *testing.T, path string, payload any) {
 	t.Helper()
 

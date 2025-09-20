@@ -20,12 +20,14 @@ type GeneratorOptions struct {
 	GraphDirection string
 	GraphClusters  bool
 	GraphPalette   string
+	PaletteFile    string
 }
 
 type Generator struct {
 	repoRoot      string
 	componentsDir string
 	options       GeneratorOptions
+	palettes      map[string]map[string]paletteColor
 }
 
 // NewGenerator builds a Generator using the provided repository and components directories.
@@ -52,9 +54,20 @@ func NewGenerator(repoRoot, componentsDir string, options GeneratorOptions) (*Ge
 		return nil, fmt.Errorf("ensure components dir: %w", err)
 	}
 
-	options = normalizeOptions(options)
+	palettes := defaultPalettes()
+	if options.PaletteFile != "" {
+		palettePath := options.PaletteFile
+		if !filepath.IsAbs(palettePath) {
+			palettePath = filepath.Join(absRepoRoot, palettePath)
+		}
+		if err := mergePaletteFile(palettePath, palettes); err != nil {
+			return nil, fmt.Errorf("load palette file: %w", err)
+		}
+	}
 
-	return &Generator{repoRoot: absRepoRoot, componentsDir: absComponentsDir, options: options}, nil
+	options = normalizeOptions(options, palettes)
+
+	return &Generator{repoRoot: absRepoRoot, componentsDir: absComponentsDir, options: options, palettes: palettes}, nil
 }
 
 // RepoRoot exposes the absolute repository root path used by the generator.
@@ -395,7 +408,10 @@ func (g *Generator) generateDependencyGraph(ctx context.Context, data roadmapArt
 		fmt.Fprintf(builder, "    %s[\"%s\"]\n", node, label)
 	}
 
-	palette := mermaidPalettes[g.options.GraphPalette]
+	palette := g.palettes[g.options.GraphPalette]
+	if palette == nil {
+		palette = g.palettes["evergreen"]
+	}
 	for className, color := range palette {
 		fmt.Fprintf(builder, "    classDef %s fill:%s,stroke:%s,color:%s,stroke-width:1px;\n", className, color.Fill, color.Stroke, color.Text)
 	}
@@ -417,13 +433,11 @@ func (g *Generator) generateDependencyGraph(ctx context.Context, data roadmapArt
 
 	classAssignments := make(map[string]string)
 	for _, record := range all {
-		node, ok := nodeIDs[record.id]
-		if !ok {
-			continue
-		}
-		className := strings.ToLower(record.typeLabel)
-		if _, ok := palette[className]; ok {
-			classAssignments[node] = className
+		if node, ok := nodeIDs[record.id]; ok {
+			className := strings.ToLower(record.typeLabel)
+			if _, ok := palette[className]; ok {
+				classAssignments[node] = className
+			}
 		}
 	}
 
@@ -810,25 +824,93 @@ type paletteColor struct {
 	Text   string
 }
 
-var mermaidPalettes = map[string]map[string]paletteColor{
-	"evergreen": {
-		"milestone": {Fill: "#2C5F2D", Stroke: "#C86E3B", Text: "#F4F1E8"},
-		"feature":   {Fill: "#6B9F7F", Stroke: "#2C5F2D", Text: "#F4F1E8"},
-		"story":     {Fill: "#E9B872", Stroke: "#C86E3B", Text: "#0E1111"},
-		"task":      {Fill: "#C86E3B", Stroke: "#2C5F2D", Text: "#F4F1E8"},
-	},
-	"infrared": {
-		"milestone": {Fill: "#1A1C23", Stroke: "#FF2A6D", Text: "#B9C1D6"},
-		"feature":   {Fill: "#6C63FF", Stroke: "#27F0C7", Text: "#FFFFFF"},
-		"story":     {Fill: "#0A0B0F", Stroke: "#FF2A6D", Text: "#FFFFFF"},
-		"task":      {Fill: "#27F0C7", Stroke: "#6C63FF", Text: "#0A0B0F"},
-	},
-	"zerothrow": {
-		"milestone": {Fill: "#141820", Stroke: "#10B9D8", Text: "#D8DEE9"},
-		"feature":   {Fill: "#0D0F12", Stroke: "#64D6E8", Text: "#D8DEE9"},
-		"story":     {Fill: "#10B9D8", Stroke: "#A3E635", Text: "#0D0F12"},
-		"task":      {Fill: "#A3E635", Stroke: "#10B9D8", Text: "#0D0F12"},
-	},
+func defaultPalettes() map[string]map[string]paletteColor {
+	base := map[string]map[string]paletteColor{
+		"evergreen": {
+			"milestone": {Fill: "#2C5F2D", Stroke: "#C86E3B", Text: "#F4F1E8"},
+			"feature":   {Fill: "#6B9F7F", Stroke: "#2C5F2D", Text: "#F4F1E8"},
+			"story":     {Fill: "#E9B872", Stroke: "#C86E3B", Text: "#0E1111"},
+			"task":      {Fill: "#C86E3B", Stroke: "#2C5F2D", Text: "#F4F1E8"},
+		},
+		"infrared": {
+			"milestone": {Fill: "#1A1C23", Stroke: "#FF2A6D", Text: "#B9C1D6"},
+			"feature":   {Fill: "#6C63FF", Stroke: "#27F0C7", Text: "#FFFFFF"},
+			"story":     {Fill: "#0A0B0F", Stroke: "#FF2A6D", Text: "#FFFFFF"},
+			"task":      {Fill: "#27F0C7", Stroke: "#6C63FF", Text: "#0A0B0F"},
+		},
+		"zerothrow": {
+			"milestone": {Fill: "#141820", Stroke: "#10B9D8", Text: "#D8DEE9"},
+			"feature":   {Fill: "#0D0F12", Stroke: "#64D6E8", Text: "#D8DEE9"},
+			"story":     {Fill: "#10B9D8", Stroke: "#A3E635", Text: "#0D0F12"},
+			"task":      {Fill: "#A3E635", Stroke: "#10B9D8", Text: "#0D0F12"},
+		},
+	}
+
+	cloned := make(map[string]map[string]paletteColor, len(base))
+	for name, classes := range base {
+		copyClasses := make(map[string]paletteColor, len(classes))
+		for className, color := range classes {
+			copyClasses[className] = color
+		}
+		cloned[name] = copyClasses
+	}
+	return cloned
+}
+
+type rawPaletteColor struct {
+	Fill   string `json:"fill"`
+	Stroke string `json:"stroke"`
+	Text   string `json:"text"`
+}
+
+func mergePaletteFile(path string, palettes map[string]map[string]paletteColor) error {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return nil
+		}
+		return err
+	}
+
+	var fileData map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fileData); err != nil {
+		return fmt.Errorf("parse palette file: %w", err)
+	}
+
+	for paletteName, payload := range fileData {
+		if paletteName == "$schema" {
+			continue
+		}
+		name := strings.ToLower(strings.TrimSpace(paletteName))
+		if name == "" {
+			return fmt.Errorf("palette name cannot be empty")
+		}
+		existing := palettes[name]
+		if existing == nil {
+			existing = make(map[string]paletteColor)
+			palettes[name] = existing
+		}
+		var classes map[string]rawPaletteColor
+		if err := json.Unmarshal(payload, &classes); err != nil {
+			return fmt.Errorf("parse palette %q: %w", paletteName, err)
+		}
+		for className, color := range classes {
+			key := strings.ToLower(strings.TrimSpace(className))
+			if !isKnownPaletteClass(key) {
+				return fmt.Errorf("unknown palette class %q in palette %q", className, paletteName)
+			}
+			if strings.TrimSpace(color.Fill) == "" || strings.TrimSpace(color.Stroke) == "" || strings.TrimSpace(color.Text) == "" {
+				return fmt.Errorf("palette %q class %q must include fill, stroke, and text colors", paletteName, className)
+			}
+			existing[key] = paletteColor{
+				Fill:   color.Fill,
+				Stroke: color.Stroke,
+				Text:   color.Text,
+			}
+		}
+	}
+
+	return nil
 }
 
 func renderProgressBar(done, total int) string {
@@ -999,7 +1081,7 @@ func collectNodesByType(typeLabel string, records []typedRecord, nodeIDs map[str
 	return nodes
 }
 
-func normalizeOptions(options GeneratorOptions) GeneratorOptions {
+func normalizeOptions(options GeneratorOptions, palettes map[string]map[string]paletteColor) GeneratorOptions {
 	direction := strings.ToUpper(strings.TrimSpace(options.GraphDirection))
 	if !isValidDirection(direction) {
 		direction = "LR"
@@ -1010,7 +1092,7 @@ func normalizeOptions(options GeneratorOptions) GeneratorOptions {
 	if palette == "" {
 		palette = "evergreen"
 	}
-	if _, ok := mermaidPalettes[palette]; !ok {
+	if _, ok := palettes[palette]; !ok {
 		palette = "evergreen"
 	}
 	options.GraphPalette = palette
@@ -1034,4 +1116,13 @@ func derefString(value *string) string {
 		return ""
 	}
 	return strings.TrimSpace(*value)
+}
+
+func isKnownPaletteClass(class string) bool {
+	switch class {
+	case "milestone", "feature", "story", "task":
+		return true
+	default:
+		return false
+	}
 }

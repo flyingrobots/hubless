@@ -15,6 +15,7 @@
 - NEVER GIT AMEND; just make a new commit.
 - NEVER REBASE; just git merge. Embrace the messy history–the truth shall set you free.
 - NEVER EVER FORCE PUSH!!! If you feel like you must halt and seek permission from the user.
+- Install repo git hooks via `make hooks` so fmt/lint/test/docs run before every commit.
 
 ## Code Quality
 
