@@ -2,15 +2,15 @@
 
 > *Imagine GitHub… but in your repo. No hub; just Git.*
 
-> [!INFO]  
-> **EARLY DAYS.** I just started this project yesterday. Expect rapid iteration, rough edges, and breaking changes.  
+> [!INFO]
+> **EARLY DAYS.** I just started this project yesterday. Expect rapid iteration, rough edges, and breaking changes.
 > If you want boring stability, wait. If you want to see Git-native project state come alive, jump in now.
 
 ---
 
 ## Why Hubless?
 
-> _Art doesn’t need to be explained; its purpose is to create a new reality as powerful and engaging as the one we live in._
+> *Art doesn’t need to be explained; its purpose is to create a new reality as powerful and engaging as the one we live in.*
 
 ### **Hubless = Freedom**
 

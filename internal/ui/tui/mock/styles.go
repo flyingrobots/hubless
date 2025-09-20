@@ -8,7 +8,7 @@ type Styles struct {
 	Footer     lipgloss.Style
 }
 
-func newStyles() Styles {
+func NewStyles() Styles {
 	return Styles{
 		Statusline: lipgloss.NewStyle().Foreground(lipgloss.Color("#00B3A4")).Bold(true),
 		Footer:     lipgloss.NewStyle().Foreground(lipgloss.Color("#6B9F7F")),

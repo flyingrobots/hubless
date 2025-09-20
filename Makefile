@@ -1,4 +1,4 @@
-.PHONY: docs docs-components docs-test docs-verify fmt fmt-check lint test hooks release-docs
+.PHONY: all clean docs docs-components docs-test docs-verify fmt fmt-check lint test hooks release-docs release release-dry
 
 docs docs-components release-docs:
 	./scripts/render-docs.sh

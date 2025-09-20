@@ -14,6 +14,7 @@ func (p layoutProfile) Name() string {
 	return p.name
 }
 
+// layoutProfile encapsulates responsive settings derived from Stickers breakpoints (in terminal columns).
 func profileForWidth(width int) layoutProfile {
 	switch {
 	case width < 100:
@@ -23,4 +24,5 @@ func profileForWidth(width int) layoutProfile {
 	default:
 		return layoutProfile{id: "lg", name: "large"}
 	}
+}
 }

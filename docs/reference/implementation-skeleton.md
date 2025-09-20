@@ -8,7 +8,7 @@
 
 ## 1. Purpose
 
-This reference collects scaffolding snippets for implementing Hubless using Go. It mirrors the architecture described in `docs/TechSpec.md` and provides minimal, compilable examples to accelerate prototyping. The code is illustrative and omits error handling and testing for brevity.
+This reference collects scaffolding snippets for implementing Hubless using Go. It mirrors the architecture described in `docs/TechSpec.md` and provides minimal examples to accelerate prototyping. The code is illustrative and may omit imports, helpers, error handling, and tests for brevity.
 
 ## 2. Project Layout
 

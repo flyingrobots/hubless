@@ -2,7 +2,7 @@ name: Quality Checks
 
 on:
   push:
-    branches: [ main, docs-release-pipeline ]
+    branches: [main, docs-release-pipeline]
   pull_request:
 
 permissions:
@@ -45,4 +45,7 @@ jobs:
         run: make docs-verify
 
       - name: Ensure docs committed
-        run: git diff --stat --exit-code
+        run: |
+          git status --porcelain
+          git diff --stat
+          git diff --exit-code
