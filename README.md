@@ -48,3 +48,13 @@ Web frontend optional (for PMs or when you’re on the go), but developers live 
   ...
   git hubless submit issue 34
   # PR updated, undrafted, review requested
+
+### Local CI dry run
+
+Mirror the GitHub Actions workflow locally:
+
+```bash
+./scripts/ci-local.sh
+```
+
+This container runs formatting checks, lightweight linting (gofmt/goimports/revive), `go vet`, unit tests, docs regeneration, and verifies that all `![[…]]` placeholders are resolved.

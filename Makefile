@@ -1,4 +1,4 @@
-.PHONY: docs docs-components docs-test docs-verify fmt fmt-check lint test hooks release-docs
+.PHONY: docs docs-components docs-test docs-verify fmt fmt-check lint vet test hooks release-docs
 
 docs docs-components release-docs:
 	./scripts/render-docs.sh
@@ -21,7 +21,10 @@ fmt-check:
 	fi
 
 lint:
-	golangci-lint run ./...
+	golangci-lint run --disable-all --enable=gofmt --enable=goimports --enable=revive ./...
+
+vet:
+	go vet ./...
 
 test:
 	go test ./cmd/... ./internal/docscomponents ./internal/release

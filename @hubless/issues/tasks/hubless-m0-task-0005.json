@@ -83,6 +83,11 @@
       "at": "2025-09-19T18:25:00Z",
       "author": "codex",
       "body": "Parameterised dependency graph output and published archived rollups with CI enforcement."
+    },
+    {
+      "at": "2025-09-20T19:30:00Z",
+      "author": "codex",
+      "body": "Mirrored the GitHub Actions toolchain in a Docker wrapper (`scripts/ci-local.sh`) and updated lint/vet steps so contributors can dry-run the full docs pipeline locally."
     }
   ]
 }

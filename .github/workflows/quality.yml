@@ -29,11 +29,11 @@ jobs:
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.59.1
+          version: v1.60.2
           install-mode: binary
           args: ./...
-        env:
-          GOTOOLCHAIN: go1.22.7
+      - name: Go vet
+        run: make vet
 
       - name: Go tests
         run: make test

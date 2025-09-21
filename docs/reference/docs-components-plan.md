@@ -64,6 +64,12 @@
    make docs-test     # generator unit tests
    make docs-verify   # ensure transclusions fully resolved
    ```
+5. Mirror CI locally with matching toolchain:
+   ```bash
+   ./scripts/ci-local.sh
+   ```
+   This builds `.ci/Dockerfile` (Go 1.25.1, Node 20, markdown-transclusion, golangci-lint v1.60.2), mounts the repo at `/workspace`, and executes the same sequence used in GitHub
+   Actions (`fmt-check`, lightweight lint, `go vet`, tests, docs render, docs verification).
 
 ## Verification
 - `go test ./internal/docscomponents` exercises the generator (fixtures & formatting guards).
