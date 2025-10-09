@@ -3,13 +3,16 @@ module github.com/flyingrobots/hubless
 go 1.25.1
 
 require (
-	github.com/76creates/stickers v1.4.0 // indirect
+	github.com/76creates/stickers v1.4.0
+	github.com/charmbracelet/bubbletea v0.27.0
+	github.com/charmbracelet/fang v0.4.0
+	github.com/charmbracelet/lipgloss v0.10.0
+	github.com/spf13/cobra v1.9.1
+)
+
+require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
-	github.com/charmbracelet/bubbles v0.18.0 // indirect
-	github.com/charmbracelet/bubbletea v0.27.0 // indirect
 	github.com/charmbracelet/colorprofile v0.3.1 // indirect
-	github.com/charmbracelet/fang v0.4.0 // indirect
-	github.com/charmbracelet/lipgloss v0.10.0 // indirect
 	github.com/charmbracelet/lipgloss/v2 v2.0.0-beta.3 // indirect
 	github.com/charmbracelet/x/ansi v0.8.0 // indirect
 	github.com/charmbracelet/x/cellbuf v0.0.13 // indirect
@@ -30,7 +33,6 @@ require (
 	github.com/muesli/roff v0.1.0 // indirect
 	github.com/muesli/termenv v0.15.2 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	github.com/spf13/cobra v1.9.1 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	golang.org/x/sync v0.13.0 // indirect

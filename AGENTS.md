@@ -49,3 +49,28 @@
 - Before implementing new features, update corresponding spec/design docs; keep docs as living sources of truth.
 - Prefer adding new CLI/TUI commands via thin adapters that call internal/application services to preserve hexagonal boundaries.
 - When extending progress tooling, consult docs/reference/update-progress-algorithm.md to keep output deterministic.
+
+
+## Session Log – 2025-09-19
+
+**Context**
+- Working on `feature/tui-cli-wireframes` for task `hubless/m1/task/0005` (mocked Bubbletea TUI + Fang CLI).
+
+**What’s Done**
+- Added `internal/mock` with catalog/status/board sample data feeding both CLI and TUI.
+- Implemented mocked Bubbletea app under `internal/ui/tui/mock` using Stickers flex layouts, responsive breakpoints, keyboard flows, and overlay behaviors described in docs/design/tui.md v0.2.
+- Added Fang-powered CLI entry (`cmd/hubless`) with commands: `list`, `view`, `kanban`, `sync`, `assign`, `status`, `comment`, `create`, plus `tui` launcher for the mock UI.
+- Updated `go.mod` deps (bubbletea v0.27.0, fang v0.4.0, stickers v1.4.0, lipgloss v0.10.0). `go build ./...` succeeds and spot checks on `list`, `view`, `kanban`, `sync` run fine.
+
+**Still TODO**
+- Run/verify `go run ./cmd/hubless tui` to review layouts once terminal input issues are resolved.
+- Flesh out documentation (README/docs) with usage notes and wireframe screenshots referencing the new commands.
+- Add tests or golden snapshots for CLI output and TUI render states (optional but recommended).
+- Plan integration from mock data to real application services (list/detail adapters) after design sign-off.
+
+**Next-Session Prompt**
+- Verify the mock TUI manually (`go run ./cmd/hubless tui`), capture feedback, and note any layout tweaks.
+- Decide where to document quickstart instructions (README section or docs/design/tui.md update).
+- Consider adding a make target for launching the wireframe demo.
+
+> NOTE: Current Codex session degraded (severe terminal input lag). Resume work by relaunching Codex, checking out `feature/tui-cli-wireframes`, and following the prompt above.
