@@ -39,4 +39,3 @@
 | [hubless/m0/task/0005](../../issues/tasks/hubless-m0-task-0005.json) | hubless/m0/task/0004 |
 | [hubless/m1/task/0002](../../issues/tasks/hubless-m1-task-0002.json) | hubless/m0/task/0001 |
 | [hubless/m1/task/0003](../../issues/tasks/hubless-m1-task-0003.json) | hubless/m1/task/0002 |
-

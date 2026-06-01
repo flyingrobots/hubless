@@ -34,11 +34,11 @@
 - Implementation scaffolding, including hexagonal layout and Go module expectations, sits in docs/reference/implementation-skeleton.md.
 - Structured planning data lives under `@hubless/` (schemas, milestones, features, stories, tasks).
 - Progress ledger algorithm is captured in docs/reference/update-progress-algorithm.md for parity with the retired Python script.
-- Go module: github.com/flyingrobots/hubless; current CLI code lives under cmd/update-progress (to be replaced by full Fang-powered hubless CLI).
+- Go module: github.com/flyingrobots/hubless; current CLI code lives under `cmd/docs-components` and `cmd/release`, with the full Hubless CLI still planned.
 
 ## Technical Stack & Practices
 
-- Language: Go 1.22; CLI stack targets Charmbracelet ecosystem (Fang/Cobra for commands, Bubbletea suite for TUI).
+- Language: Go 1.26.3; CLI stack targets Charmbracelet ecosystem (Fang/Cobra for commands, Bubbletea suite for TUI).
 - Persistence: Git plumbing (mktree, commit-tree, update-ref) writing refs/hubless/**; catalog + snapshots for fast reads.
 - Sync roadmap: Git remotes first, GitHub projection later with stable event IDs and refs/hubless/meta/github-map mapping.
 - Testing strategy: unit-test domain replay, adapter plumbing, and Bubbletea models (see docs/design/tui.md and reference skeleton).

@@ -102,19 +102,15 @@ Traditional issue trackers fragment context between code and planning artifacts 
 
 ### 9.1 Planning Snapshot
 
-Live metrics sourced from `@hubless/` JSON keep this PRD grounded in the current plan:
+Live metrics sourced from `@hubless/` JSON keep this PRD grounded in the current plan. The generated source snippets are:
 
-![[docs/components/roadmap/progress.md]]
-
-![[docs/components/roadmap/dependencies.md]]
-
-![[docs/components/roadmap/dependencies-graph.md]]
+- `docs/components/roadmap/progress.md`
+- `docs/components/roadmap/dependencies.md`
+- `docs/components/roadmap/dependencies-graph.md`
 
 ### 9.2 Recently Completed Work
 
-The archive rolls up completed items for release notes:
-
-![[docs/components/issues/archived-tasks.md]]
+The archive rolls up completed items for release notes through `docs/components/issues/archived-tasks.md`.
 
 ## 10. Success Metrics
 

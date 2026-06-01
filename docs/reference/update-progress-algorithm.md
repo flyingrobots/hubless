@@ -4,18 +4,18 @@
 
 - Version: 0.1
 - Last updated: 2025-09-18
-- Source: Transcribed from `update_progress.py`
+- Source: Transcribed from the retired progress updater
 
 ## 1. Purpose
 
-This document captures the exact behavior of the original Python script that synchronized GitMind’s Features Ledger and README progress indicators. It exists so the algorithm can be reimplemented in other languages (e.g., Go) without referring back to the deleted script.
+This document captures the exact behavior of the original Python script that synchronized the feature ledger and README progress indicators. It exists so the algorithm can be reimplemented in other languages (for example, Go) without referring back to the deleted script.
 
 ## 2. Inputs and Outputs
 
 - **Inputs**:
   - Markdown ledger at `<root>/docs/features/Features_Ledger.md`.
   - Optional `<root>/README.md` status section.
-  - Optional `--root` CLI flag or `GITMIND_ROOT` environment variable to locate the GitMind checkout.
+  - Optional `--root` CLI flag or `HUBLESS_ROOT` environment variable to locate the repository checkout.
 - **Outputs**:
   - Updated progress blocks embedded in the ledger file.
   - Updated README progress block when the document contains a `## 📊 Status` section.
@@ -29,6 +29,7 @@ This document captures the exact behavior of the original Python script that syn
 ## 4. Markdown Block Patterns
 
 The script uses compiled regular expressions to locate fenced blocks:
+
 - `<!-- group-progress:<slug>:begin --> … <!-- group-progress:<slug>:end -->`
 - `<!-- progress-overall:begin --> … <!-- progress-overall:end -->`
 - Milestone blocks for `mvp`, `alpha`, `beta`, `v1`.
@@ -43,7 +44,7 @@ Given a percentage in the range `[0, 1]`, the script:
 2. Computes `filled = round(pct * width)` with `width = 40`.
 3. Inserts an edge character `▓` if there is a fractional remainder and space for an additional cell.
 4. Pads the remainder of the bar with `░`.
-5. Appends a textual percentage (e.g., ` 72%`).
+5. Appends a textual percentage, for example `72%`.
 
 ## 6. Group Progress Calculation
 
@@ -83,7 +84,7 @@ For every ledger run:
 1. Replace each group block with a fenced code block containing the new progress bar, a legend row, and the `features=<count>` footer.
 2. Update the overall section (`<!-- progress-overall -->`) with a progress bar and inline legend `MVP 70% | Alpha 55% | …`.
 3. Replace each milestone block (`progress-mvp`, etc.) with the gated percentage.
-4. Extract outstanding tasks via the Tasklist parser (Section 9) and rewrite each block quote to contain either the list of tasks (each line prefixed with `> `) or the placeholder `> _All tracked tasks complete_`.
+4. Extract outstanding tasks via the Tasklist parser (Section 9) and rewrite each block quote to contain either the list of tasks (each line prefixed with a blockquote marker) or the placeholder `> _All tracked tasks complete_`.
 5. Write the ledger back to disk only if changes were detected.
 
 ## 9. Tasklist Parsing
@@ -102,7 +103,7 @@ For every ledger run:
    ````markdown
    <!-- features-progress:begin -->
    ```text
-   Feature progress to be updated via hubless/update_progress.py
+   Feature progress will be updated by the Hubless progress renderer.
    ```
    <!-- features-progress:end -->
    ````

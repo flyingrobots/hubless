@@ -4,7 +4,7 @@ Thanks for building Hubless! This document summarizes how we collaborate. For th
 
 ## Prerequisites
 
-- Go 1.22+
+- Go 1.26.3
 - Git 2.30+
 - Familiarity with Charmbracelet (Bubbletea, Lipgloss, Bubbles) is helpful.
 
@@ -49,7 +49,11 @@ Thanks for building Hubless! This document summarizes how we collaborate. For th
 - For custom dependency graph styling, pass `--graph-direction`, `--graph-clusters`, or `--graph-palette` to `cmd/docs-components` (see `README.md`).
 - `CHANGELOG.md` is generated from `CHANGELOG.template.md` and `docs/reference/release-notes.*`; edit the template or JSON, not the generated file.
 - Palette overrides live in `docs/reference/palettes.json` (validated by `docs/reference/palettes.schema.json`); point `--palette-file` elsewhere if you keep custom palettes in another location.
-- Install [`golangci-lint`](https://golangci-lint.run/) locally so `make lint` and the pre-commit hook can execute successfully. Recommended:
+- Install [`golangci-lint`](https://golangci-lint.run/) locally so `make lint` and the pre-commit hook can execute successfully. Recommended install command:
+
+  ```bash
+  go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.12.2
+  ```
 
 ## Tooling & Hooks
 

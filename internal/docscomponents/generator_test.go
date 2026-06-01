@@ -87,6 +87,9 @@ func TestGeneratorGenerate(t *testing.T) {
 	if !strings.Contains(dependencies, "sample/task/0001") {
 		t.Fatalf("expected task dependency row in dependencies summary, got:\n%s", dependencies)
 	}
+	if strings.HasSuffix(dependencies, "\n\n") {
+		t.Fatalf("expected generated dependencies snippet to end with one newline, got:\n%q", dependencies)
+	}
 	if !strings.Contains(dependencies, "[sample/task/0001](../../issues/tasks/sample-task-1.json)") {
 		t.Fatalf("expected task dependency link to resolve from generated roadmap README, got:\n%s", dependencies)
 	}

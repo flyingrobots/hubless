@@ -15,9 +15,15 @@ This reference collects scaffolding snippets for implementing Hubless using Go. 
 ```bash
 hubless/
 ├─ cmd/
+│  ├─ docs-components/
+│  │  └─ main.go               # generated docs component renderer
+│  ├─ release/
+│  │  └─ main.go               # release automation CLI
 │  └─ hubless/
-│     └─ main.go               # composition root
+│     └─ main.go               # planned product composition root
 ├─ internal/
+│  ├─ docscomponents/          # docs component generator
+│  ├─ release/                 # release service
 │  ├─ domain/                  # pure domain types and logic
 │  │  ├─ events.go
 │  │  └─ issue.go
@@ -34,6 +40,10 @@ hubless/
 │        ├─ listview.go
 │        └─ styles.go
 ├─ go.mod
+├─ scripts/
+│  ├─ render-docs.sh
+│  ├─ verify-docs.sh
+│  └─ test-release-docker.sh
 └─ Makefile                    # build/test helpers
 ```
 
@@ -58,6 +68,8 @@ require (
 
 ```go
 package domain
+
+import "time"
 
 type EventType string
 
@@ -87,6 +99,8 @@ type Event struct {
 
 ```go
 package domain
+
+import "time"
 
 type IssueID string
 
@@ -132,12 +146,28 @@ func Replay(id IssueID, events []Event) Issue {
     }
     return issue
 }
+
+func getString(payload map[string]any, key, fallback string) string {
+    value, ok := payload[key].(string)
+    if !ok || value == "" {
+        return fallback
+    }
+    return value
+}
 ```
 
 ## 5. Application Layer (`internal/application/services.go`)
 
 ```go
 package application
+
+import (
+    "context"
+    "sort"
+
+    "github.com/flyingrobots/hubless/internal/domain"
+    "github.com/flyingrobots/hubless/internal/ports"
+)
 
 type Service struct {
     store ports.EventStore
@@ -192,6 +222,13 @@ func (s *Service) List(ctx context.Context) ([]IssueSummary, error) {
 ```go
 package ports
 
+import (
+    "context"
+    "time"
+
+    "github.com/flyingrobots/hubless/internal/domain"
+)
+
 type EventStore interface {
     ListIssues(ctx context.Context) ([]domain.IssueID, error)
     LoadEvents(ctx context.Context, id domain.IssueID) ([]domain.Event, error)
@@ -204,6 +241,14 @@ type EventStore interface {
 
 ```go
 package gitstore
+
+import (
+    "context"
+    "fmt"
+    "strings"
+
+    "github.com/flyingrobots/hubless/internal/domain"
+)
 
 func (s *Store) AppendEvent(ctx context.Context, evt domain.Event) (string, error) {
     tree, err := s.gitWithInput("", "mktree")
@@ -228,6 +273,15 @@ func (s *Store) AppendEvent(ctx context.Context, evt domain.Event) (string, erro
 
 ```go
 package tui
+
+import (
+    "context"
+
+    tea "github.com/charmbracelet/bubbletea"
+    "github.com/charmbracelet/bubbles/list"
+    "github.com/charmbracelet/bubbles/viewport"
+    "github.com/flyingrobots/hubless/internal/application"
+)
 
 type Model struct {
     ctx    context.Context

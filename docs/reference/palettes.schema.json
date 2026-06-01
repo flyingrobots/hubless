@@ -1,7 +1,12 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/flyingrobots/hubless/docs/reference/palettes.schema.json",
   "title": "Docs Components Palette Schema",
   "type": "object",
+  "minProperties": 1,
+  "propertyNames": {
+    "pattern": "^[a-z][a-z0-9-]*$"
+  },
   "additionalProperties": {
     "type": "object",
     "properties": {

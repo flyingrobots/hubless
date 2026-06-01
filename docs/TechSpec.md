@@ -35,7 +35,7 @@ Hubless augments a Git repository with an event-sourced work-tracking subsystem 
 
 ### 3.1 Namespace Layout
 
-```
+```text
 refs/
   hubless/
     issues/<issue-id>               # append-only event chain for one issue
@@ -68,14 +68,14 @@ Event types are extensible. Consumers must tolerate unknown payload fields.
 
 Each event commit uses a two-line format:
 
-```
+```text
 <subject>
 <json_payload_on_single_line>
 ```
 
 Example:
 
-```
+```text
 issue:status_changed
 {"type":"issue:status_changed","issue":"000123","actor":"james","ts":"2025-09-18T23:15:47Z","payload":{"from":"open","to":"in-progress"},"lamport":2,"event_id":"1c0b8e6e3f3c6..."}
 ```
@@ -86,7 +86,7 @@ issue:status_changed
 - `ts`: ISO-8601 timestamp (UTC).
 - `payload`: event-specific data.
 - `lamport`: monotonically increasing counter per issue for conflict-free ordering.
-- `event_id`: optional stable hash (SHA1 of canonicalized payload) used for deduplication across projections.
+- `event_id`: optional stable hash (SHA-256 of canonicalized payload) used for deduplication across projections.
 
 ### 3.4 Snapshot Commits
 
@@ -96,7 +96,7 @@ Snapshots capture materialized issue state. They live under `refs/hubless/snapsh
 
 The catalog ref points to a commit whose tree summarizes all issues:
 
-```
+```text
 /issues/
   000123  # blob contains tip OID, last update timestamp, priority tag, status
 /meta/
@@ -134,11 +134,12 @@ See `docs/design/tui.md` for detailed view flows, key bindings, and Bubbletea co
 ## 5. Application Architecture
 
 Hubless follows a hexagonal architecture with the following layers:
+
 - **Domain**: Event definitions, issue aggregates, replay logic.
 - **Application Services**: Orchestrate commands, perform validation, compute derived data.
 - **Adapters**: Implement persistence via Git, optionally GitHub. TUI and CLI commands act as inbound adapters.
 
-```
+```text
 hubless/
 ├─ cmd/hubless/main.go
 ├─ internal/domain/
@@ -160,7 +161,7 @@ hubless/
 
 ### 6.2 Plumbing Sequence (Append Event)
 
-```
+```bash
 1. tree=$(printf "" | git mktree)
 2. msg=$'issue:status_changed\n{"type":"issue:status_changed",...}'
 3. new_oid=$(printf "%s" "$msg" | git commit-tree "$tree" -p "$current_ref_head" --author "$AUTHOR" --date "$DATE")
@@ -174,8 +175,8 @@ All plumbing commands run within the repository root passed to the adapter. Fail
 
 Stable IDs prevent duplicate publications during sync. The recommended algorithm:
 
-```
-event_id = sha1(type + "\0" + issue + "\0" + ts + "\0" + actor + "\0" + canonical_json(payload))
+```text
+event_id = sha256(type + "\0" + issue + "\0" + ts + "\0" + actor + "\0" + canonical_json(payload))
 ```
 
 The adapter stores `event_id` in the commit payload and uses it to match remote commits and GitHub artifacts.
@@ -186,7 +187,7 @@ The adapter stores `event_id` in the commit payload and uses it to match remote 
 
 Configure remotes to fetch/push Hubless refs:
 
-```
+```ini
 [remote "origin"]
     fetch = +refs/heads/*:refs/remotes/origin/*
     fetch = +refs/hubless/**:refs/hubless/**
@@ -223,19 +224,15 @@ Configure remotes to fetch/push Hubless refs:
 
 ### 10.1 Live Snapshot
 
-Operational rollups derived from the structured planning data keep this spec anchored to the live backlog:
+Operational rollups derived from the structured planning data keep this spec anchored to the live backlog. The generated source snippets are:
 
-![[docs/components/roadmap/progress.md]]
-
-![[docs/components/roadmap/dependencies-graph.md]]
-
-![[docs/components/issues/status-summary.md]]
+- `docs/components/roadmap/progress.md`
+- `docs/components/roadmap/dependencies-graph.md`
+- `docs/components/issues/status-summary.md`
 
 ### 10.2 Recently Completed
 
-Up-to-date archive gleaned from structured data:
-
-![[docs/components/issues/archived-tasks.md]]
+The up-to-date archive is generated from `docs/components/issues/archived-tasks.md`.
 
 ## 11. Risks and Mitigations
 

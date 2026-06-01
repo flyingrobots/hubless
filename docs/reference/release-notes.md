@@ -1,4 +1,4 @@
-# Hubless Release Notes
+## Hubless Release Notes
 
 > Generated via `make docs`. Edit JSON/tasks, then rerun to refresh.
 

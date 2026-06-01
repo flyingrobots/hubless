@@ -1158,6 +1158,7 @@ func (g *Generator) writeFile(destPath, contents string) error {
 		return fmt.Errorf("ensure directory for %s: %w", destPath, err)
 	}
 
+	contents = strings.TrimRight(contents, "\n") + "\n"
 	return os.WriteFile(destPath, []byte(contents), 0o644)
 }
 
