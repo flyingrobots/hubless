@@ -39,6 +39,15 @@ type AppModel struct {
 	styles Styles
 }
 
+// NewModel creates an AppModel initialized for a mocked TUI.
+//
+// The returned model is set to the Status screen, sized to the provided
+// width and height, and populated with the given sections, issues, and board
+// columns. The layout profile is selected based on width, default styles are
+// applied, and selection indices (sectionIndex, issueIndex) start at 0.
+//
+// This constructor is intended for creating self-contained mock UI state used
+// in layout and rendering tests.
 func NewModel(width, height int, sections []mockStatusSection, issues []mockIssue, board []mockBoardColumn) AppModel {
 	prof := profileForWidth(width)
 	return AppModel{
@@ -49,7 +58,7 @@ func NewModel(width, height int, sections []mockStatusSection, issues []mockIssu
 		issues:       issues,
 		board:        board,
 		profile:      prof,
-		styles:       newStyles(),
+		styles:       NewStyles(),
 		sectionIndex: 0,
 		issueIndex:   0,
 	}

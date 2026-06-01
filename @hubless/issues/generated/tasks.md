@@ -30,9 +30,8 @@
 ## How to Update
 
 1. Add or edit a JSON file under `@hubless/issues/tasks/` (see `../schema/task.schema.json`).
-2. Update this table to reflect new statuses or metadata.
+2. Do not edit generated tables. Update the JSON under `@hubless/issues/tasks/` and re-run `make docs`.
 3. Once a task is `DONE` and has badges **Tested**, **Documented**, **Shipped**, move the JSON file to `tasks.archive/` and record it in `tasks.archive.md`.
-
 ## Anatomy of a Task
 
 ```json

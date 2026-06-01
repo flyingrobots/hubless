@@ -32,7 +32,12 @@ type Generator struct {
 	palettes      map[string]map[string]paletteColor
 }
 
-// NewGenerator builds a Generator using the provided repository and components directories.
+// NewGenerator creates a Generator configured to write component snippets for the repository at
+// repoRoot. It resolves and stores absolute paths for repoRoot and componentsDir (defaulting
+// componentsDir to repoRoot/docs/components when empty), ensures the components directory exists,
+// loads the built-in palettes and merges palettes from options.PaletteFile if provided, and
+// normalizes the supplied GeneratorOptions. Returns an initialized Generator or an error if input
+// validation, path resolution, directory creation, or palette loading fails.
 func NewGenerator(repoRoot, componentsDir string, options GeneratorOptions) (*Generator, error) {
 	if repoRoot == "" {
 		return nil, errors.New("repoRoot is required")
@@ -772,6 +777,12 @@ func (g *Generator) readTaskRecords(dir string) ([]recordWithPath[taskRecord], e
 	return results, nil
 }
 
+// dependencyRowsFromArtifacts builds dependency rows for artifacts.
+// It examines each artifact record, cleans its Dependencies with cleanValues,
+// and for records that have one or more dependencies appends a dependencyRow
+// containing the artifact ID, a link formed by joining linkPrefix with the
+// basename of the record's sourcePath, and the cleaned dependency list.
+// Records without dependencies are omitted from the returned slice.
 func dependencyRowsFromArtifacts(records []recordWithPath[artifactRecord], linkPrefix string) []dependencyRow {
 	rows := make([]dependencyRow, 0, len(records))
 	for _, record := range records {
@@ -789,6 +800,10 @@ func dependencyRowsFromArtifacts(records []recordWithPath[artifactRecord], linkP
 	return rows
 }
 
+// dependencyRowsFromTasks builds dependencyRow entries for each task record that has
+// one or more dependencies. The returned rows contain the task ID, a link formed by
+// joining linkPrefix with the task record's source file base name, and the cleaned
+// list of dependency IDs. Records without dependencies are omitted.
 func dependencyRowsFromTasks(records []recordWithPath[taskRecord], linkPrefix string) []dependencyRow {
 	rows := make([]dependencyRow, 0)
 	for _, record := range records {
@@ -806,6 +821,8 @@ func dependencyRowsFromTasks(records []recordWithPath[taskRecord], linkPrefix st
 	return rows
 }
 
+// countDoneArtifacts returns the number of artifact records whose Status is considered completed.
+// It uses isDoneStatus to determine completion (e.g., DONE, COMPLETED, COMPLETE, SHIPPED, case-insensitive).
 func countDoneArtifacts(records []recordWithPath[artifactRecord]) int {
 	count := 0
 	for _, record := range records {
@@ -816,6 +833,7 @@ func countDoneArtifacts(records []recordWithPath[artifactRecord]) int {
 	return count
 }
 
+// (e.g., DONE, COMPLETED, COMPLETE, SHIPPED).
 func countDoneTasks(records []recordWithPath[taskRecord]) int {
 	count := 0
 	for _, record := range records {
@@ -832,6 +850,12 @@ type paletteColor struct {
 	Text   string
 }
 
+// defaultPalettes returns the built-in color palettes used for graph node styling.
+//
+// The return value is a map from palette name to a map of class names
+// ("milestone", "feature", "story", "task") to paletteColor. The function
+// returns a deep copy of the internal base definitions so callers can modify
+// the result without affecting the originals.
 func defaultPalettes() map[string]map[string]paletteColor {
 	base := map[string]map[string]paletteColor{
 		"evergreen": {
@@ -871,6 +895,16 @@ type rawPaletteColor struct {
 	Text   string `json:"text"`
 }
 
+// mergePaletteFile reads a JSON palette file at path and merges its palette
+// definitions into the provided palettes map.
+//
+// The file may contain multiple palette objects keyed by name; a top-level
+// "$schema" key is ignored. Palette and class names are normalized to lower
+// case and trimmed. Each palette class must be one of the known classes
+// (milestone, feature, story, task) and must include non-empty `fill`,
+// `stroke`, and `text` color values. Missing file is not an error (returns
+// nil). On success the palettes map is mutated to include or update the
+// palettes from the file; on failure a descriptive error is returned.
 func mergePaletteFile(path string, palettes map[string]map[string]paletteColor) error {
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -921,6 +955,13 @@ func mergePaletteFile(path string, palettes map[string]map[string]paletteColor) 
 	return nil
 }
 
+// renderProgressBar returns a fixed-width textual progress bar (10 units) and a
+// percentage for the given done/total pair.
+//
+// If total is <= 0 the function returns a zeroed bar "[----------] 0%". The
+// progress ratio is clamped to [0,1]; the number of filled units is computed by
+// rounding ratio*10 and the percentage is ratio*100 rounded to the nearest
+// integer.
 func renderProgressBar(done, total int) string {
 	const width = 10
 	if total <= 0 {
@@ -944,6 +985,8 @@ func renderProgressBar(done, total int) string {
 	return fmt.Sprintf("[%s%s] %d%%", strings.Repeat("#", filled), strings.Repeat("-", width-filled), percent)
 }
 
+// isDoneStatus reports whether a status string represents a completed state.
+// It returns true for the case-insensitive values "DONE", "COMPLETED", "COMPLETE", or "SHIPPED"; otherwise false.
 func isDoneStatus(status string) bool {
 	switch strings.ToUpper(strings.TrimSpace(status)) {
 	case "DONE", "COMPLETED", "COMPLETE", "SHIPPED":
@@ -953,6 +996,7 @@ func isDoneStatus(status string) bool {
 	}
 }
 
+// any other or empty status            -> 5
 func statusRank(status string) int {
 	switch strings.ToUpper(strings.TrimSpace(status)) {
 	case "DONE", "COMPLETED", "COMPLETE", "SHIPPED":
@@ -970,6 +1014,9 @@ func statusRank(status string) int {
 	}
 }
 
+// cleanValues returns a new slice containing the non-empty strings from values
+// after trimming surrounding whitespace. The original order is preserved.
+// If values is nil or has length zero, cleanValues returns nil.
 func cleanValues(values []string) []string {
 	if len(values) == 0 {
 		return nil
@@ -1017,6 +1064,15 @@ func (g *Generator) generateChangelog(ctx context.Context, records []recordWithP
 	if len(done) == 0 {
 		builder.WriteString("_No completed tasks yet._\n")
 	} else {
+		sort.Slice(done, func(i, j int) bool {
+			ti := parseTimestamp(derefString(done[i].data.UpdatedAt))
+			tj := parseTimestamp(derefString(done[j].data.UpdatedAt))
+			if !ti.Equal(tj) {
+				return ti.After(tj)
+			}
+			return done[i].data.ID < done[j].data.ID
+		})
+
 		for _, record := range done {
 			date := derefString(record.data.UpdatedAt)
 			if strings.TrimSpace(date) == "" {
@@ -1047,12 +1103,12 @@ func (g *Generator) generateChangelog(ctx context.Context, records []recordWithP
 	return nil
 }
 
-func parseTimestamp(value string) time.Time {
-	s := strings.TrimSpace(value)
+func parseTimestamp(s string) time.Time {
+	s = strings.TrimSpace(s)
 	if s == "" {
 		return time.Time{}
 	}
-
+	// Try common formats (include non-padded and zero-padded forms)
 	layouts := []string{
 		time.RFC3339,
 		"2006-1-2 15:04:05",
@@ -1062,29 +1118,25 @@ func parseTimestamp(value string) time.Time {
 		"2006-01-02 15:04",
 		"2006-01-02",
 	}
-
 	for _, layout := range layouts {
 		if t, err := time.Parse(layout, s); err == nil {
 			return t
 		}
 	}
-
+	// Fallback: normalize YYYY-M-D by parsing numeric month/day and zero-padding
 	parts := strings.Split(s, "-")
 	if len(parts) == 3 {
-		year := strings.TrimSpace(parts[0])
-		month := strings.TrimSpace(parts[1])
-		day := strings.TrimSpace(parts[2])
-
-		if mi, err := strconv.Atoi(month); err == nil {
-			if di, err := strconv.Atoi(day); err == nil {
-				formatted := fmt.Sprintf("%s-%02d-%02d", year, mi, di)
-				if t, err := time.Parse("2006-01-02", formatted); err == nil {
+		y := strings.TrimSpace(parts[0])
+		mStr := strings.TrimSpace(parts[1])
+		dStr := strings.TrimSpace(parts[2])
+		if mi, err1 := strconv.Atoi(mStr); err1 == nil {
+			if di, err2 := strconv.Atoi(dStr); err2 == nil {
+				if t, err := time.Parse("2006-01-02", fmt.Sprintf("%s-%02d-%02d", y, mi, di)); err == nil {
 					return t
 				}
 			}
 		}
 	}
-
 	return time.Time{}
 }
 
@@ -1096,6 +1148,8 @@ func (g *Generator) writeFile(destPath, contents string) error {
 	return os.WriteFile(destPath, []byte(contents), 0o644)
 }
 
+// formatList trims and filters empty strings from values and returns them joined by ", ".
+// If the resulting list is empty it returns an em dash "—".
 func formatList(values []string) string {
 	cleaned := cleanValues(values)
 	if len(cleaned) == 0 {
@@ -1105,6 +1159,9 @@ func formatList(values []string) string {
 	return strings.Join(cleaned, ", ")
 }
 
+// escapeMermaidLabel returns label with characters escaped for use in Mermaid diagrams.
+// It escapes backslashes, double quotes, and square brackets so the label can be safely
+// embedded in Mermaid node definitions.
 func escapeMermaidLabel(label string) string {
 	replacer := strings.NewReplacer(
 		"\\", "\\\\",
@@ -1115,6 +1172,7 @@ func escapeMermaidLabel(label string) string {
 	return replacer.Replace(label)
 }
 
+// the record's id; records without a corresponding entry in nodeIDs are skipped.
 func collectNodesByType(typeLabel string, records []typedRecord, nodeIDs map[string]string) []string {
 	nodes := make([]string, 0)
 	for _, record := range records {
@@ -1130,6 +1188,10 @@ func collectNodesByType(typeLabel string, records []typedRecord, nodeIDs map[str
 	return nodes
 }
 
+// normalizeOptions normalizes and validates graph-related fields in a GeneratorOptions value.
+// It uppercases and validates GraphDirection (defaults to "LR" if invalid) and lowercases
+// GraphPalette (defaults to "evergreen" or to "evergreen" if the named palette is not present
+// in the provided palettes map), returning the adjusted options.
 func normalizeOptions(options GeneratorOptions, palettes map[string]map[string]paletteColor) GeneratorOptions {
 	direction := strings.ToUpper(strings.TrimSpace(options.GraphDirection))
 	if !isValidDirection(direction) {
@@ -1149,6 +1211,8 @@ func normalizeOptions(options GeneratorOptions, palettes map[string]map[string]p
 	return options
 }
 
+// isValidDirection reports whether the given graph direction is one of the
+// supported Mermaid directions: "LR", "RL", "TB", or "BT".
 func isValidDirection(direction string) bool {
 	switch direction {
 	case "LR", "RL", "TB", "BT":
@@ -1160,6 +1224,7 @@ func isValidDirection(direction string) bool {
 
 var orderedTypes = []string{"Milestone", "Feature", "Story", "Task"}
 
+// string if the pointer is nil.
 func derefString(value *string) string {
 	if value == nil {
 		return ""
@@ -1167,6 +1232,8 @@ func derefString(value *string) string {
 	return strings.TrimSpace(*value)
 }
 
+// isKnownPaletteClass reports whether the given class name is a recognized palette
+// class. Valid names are "milestone", "feature", "story", and "task".
 func isKnownPaletteClass(class string) bool {
 	switch class {
 	case "milestone", "feature", "story", "task":

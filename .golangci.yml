@@ -1,15 +1,11 @@
 run:
   timeout: 5m
   tests: true
-  gofmt: false
-  disable-default-linters: true
-
 linters:
   enable:
     - gofmt
     - goimports
     - revive
-
 issues:
   exclude-use-default: false
 

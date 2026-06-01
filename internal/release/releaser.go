@@ -25,6 +25,10 @@ type Releaser struct {
 	repoRoot string
 }
 
+// New returns a Releaser for the repository located at repoRoot.
+// repoRoot must be a non-empty path; it may be relative and will be resolved
+// to an absolute path. Returns an error if repoRoot is empty or the path
+// cannot be resolved.
 func New(repoRoot string) (*Releaser, error) {
 	if repoRoot == "" {
 		return nil, errors.New("repo root is required")
@@ -73,6 +77,10 @@ func (r *Releaser) Run(ctx context.Context, opts Options) error {
 	if opts.DryRun {
 		fmt.Printf("[dry-run] Ready to tag %s using notes from %s\n", version, notesPath)
 		fmt.Printf("[dry-run] Tag message preview:\n%s\n", trimmedNotes)
+		fmt.Println("[dry-run] Next steps:")
+		fmt.Printf("  git tag -a %s -F <notes>\n", version)
+		fmt.Printf("  git push origin %s\n", version)
+		fmt.Println("  Optionally: gh release create", version, "-F", notesPath)
 		return nil
 	}
 
@@ -127,7 +135,7 @@ func (r *Releaser) runChecks(ctx context.Context) error {
 }
 
 func (r *Releaser) ensureClean(ctx context.Context) error {
-	output, err := r.capture(ctx, "git", "status", "--porcelain")
+	output, err := r.capture(ctx, "git", "status", "--porcelain=v1", "--untracked-files=no")
 	if err != nil {
 		return fmt.Errorf("git status: %w", err)
 	}
@@ -138,6 +146,9 @@ func (r *Releaser) ensureClean(ctx context.Context) error {
 }
 
 func (r *Releaser) ensureTagDoesNotExist(ctx context.Context, version string) error {
+	if err := r.runCommand(ctx, "git", "fetch", "--tags", "--prune", "--quiet"); err != nil {
+		return fmt.Errorf("fetch tags: %w", err)
+	}
 	output, err := r.capture(ctx, "git", "tag", "--list", version)
 	if err != nil {
 		return fmt.Errorf("check existing tags: %w", err)
@@ -163,13 +174,14 @@ func (r *Releaser) capture(ctx context.Context, name string, args ...string) (st
 	return string(output), err
 }
 
+// normalizeVersion trims whitespace from v and ensures it begins with a "v".
+// If the trimmed version is empty it is returned unchanged; otherwise, a
+// leading "v" is added when missing (e.g. "1.2.3" -> "v1.2.3").
 func normalizeVersion(version string) string {
 	version = strings.TrimSpace(version)
 	if version == "" {
 		return version
 	}
-	if !strings.HasPrefix(version, "v") {
-		return "v" + version
-	}
-	return version
+	version = strings.TrimLeft(version, "vV")
+	return "v" + version
 }

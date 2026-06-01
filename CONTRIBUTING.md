@@ -50,10 +50,6 @@ Thanks for building Hubless! This document summarizes how we collaborate. For th
 - `CHANGELOG.md` is generated from `CHANGELOG.template.md` and `docs/reference/release-notes.*`; edit the template or JSON, not the generated file.
 - Palette overrides live in `docs/reference/palettes.json` (validated by `docs/reference/palettes.schema.json`); point `--palette-file` elsewhere if you keep custom palettes in another location.
 - Install [`golangci-lint`](https://golangci-lint.run/) locally so `make lint` and the pre-commit hook can execute successfully. Recommended:
-  ```bash
-  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | \
-    sh -s -- -b "$(go env GOPATH)/bin" v1.59.1
-  ```
 
 ## Tooling & Hooks
 

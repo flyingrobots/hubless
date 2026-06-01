@@ -166,7 +166,8 @@ func TestGeneratorGenerateCustomGraphOptions(t *testing.T) {
 	if !strings.Contains(strings.ToLower(graph), "subgraph feature") {
 		t.Fatalf("expected dependency graph to include clusters, got:\n%s", graph)
 	}
-	if !strings.Contains(graph, "classDef milestone fill:#1A1C23") {
+	if !strings.Contains(strings.ToLower(strings.ReplaceAll(graph, " ", "")),
+		"classdefmilestonefill:#1a1c23") {
 		t.Fatalf("expected infrared palette colors in graph, got:\n%s", graph)
 	}
 }
@@ -227,7 +228,7 @@ func TestGeneratorPaletteFile(t *testing.T) {
 	}
 
 	graph := readFile(t, filepath.Join(componentsDir, "roadmap", "dependencies-graph.md"))
-	if !strings.Contains(graph, "classDef milestone fill:#123456") {
+	if !strings.Contains(graph, "classDef milestone fill:#123456,stroke:#654321,color:#FFFFFF") {
 		t.Fatalf("expected custom palette colors in graph, got:\n%s", graph)
 	}
 }

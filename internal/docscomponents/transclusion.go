@@ -19,7 +19,13 @@ type TransclusionOptions struct {
 	OutputPath string
 }
 
-// RunTransclusion executes the markdown-transclusion CLI to render a document template.
+// RunTransclusion runs the markdown-transclusion CLI to render a document template
+// using opts. It validates that opts.InputPath and opts.OutputPath are set, defaults
+// opts.Bin to "markdown-transclusion" when empty, and uses opts.BasePath or the
+// current working directory as the base. Paths are resolved to absolute values
+// relative to the base, the output directory is created if necessary, and the CLI is
+// executed with the provided context. On failure the returned error includes the
+// CLI's combined output.
 func RunTransclusion(ctx context.Context, opts TransclusionOptions) error {
 	if opts.InputPath == "" {
 		return errors.New("input path is required")
@@ -75,6 +81,7 @@ func RunTransclusion(ctx context.Context, opts TransclusionOptions) error {
 	return nil
 }
 
+// absolute path fails.
 func makeAbsoluteWithBase(pathValue, base string) (string, error) {
 	if filepath.IsAbs(pathValue) {
 		return pathValue, nil
