@@ -34,8 +34,6 @@ type AppModel struct {
 
 	profile layoutProfile
 
-	keyPrefix rune
-
 	styles Styles
 }
 
@@ -48,9 +46,9 @@ type AppModel struct {
 //
 // This constructor is intended for creating self-contained mock UI state used
 // in layout and rendering tests.
-func NewModel(width, height int, sections []mockStatusSection, issues []mockIssue, board []mockBoardColumn) AppModel {
+func NewModel(width, height int, sections []mockStatusSection, issues []mockIssue, board []mockBoardColumn) *AppModel {
 	prof := profileForWidth(width)
-	return AppModel{
+	return &AppModel{
 		screen:       ScreenStatus,
 		width:        width,
 		height:       height,
@@ -64,13 +62,13 @@ func NewModel(width, height int, sections []mockStatusSection, issues []mockIssu
 	}
 }
 
-func (m AppModel) Init() tea.Cmd {
+func (m *AppModel) Init() tea.Cmd {
 	return tea.Tick(150*time.Millisecond, func(time.Time) tea.Msg {
 		return readyMsg{}
 	})
 }
 
-func (m AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
@@ -86,7 +84,7 @@ func (m AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m AppModel) View() string {
+func (m *AppModel) View() string {
 	box := flexbox.New(m.width, m.height)
 	headerRow := box.NewRow()
 	headerRow.AddCells(flexbox.NewCell(1, 1).SetContent(m.styles.Statusline.Render("Hubless Mock · " + m.profile.Name())))
@@ -98,7 +96,7 @@ func (m AppModel) View() string {
 	return box.Render()
 }
 
-func (m AppModel) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
+func (m *AppModel) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	switch msg.String() {
 	case "q", "ctrl+c":
 		return m, tea.Quit

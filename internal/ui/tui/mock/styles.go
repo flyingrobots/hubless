@@ -10,12 +10,16 @@ type Styles struct {
 
 // NewStyles constructs and returns a Styles value with the mock TUI's default styling.
 //
-// The returned Styles sets:
-// - Statusline: foreground color #00B3A4 and bold text.
-// - Footer: foreground color #6B9F7F.
+// The returned Styles sets adaptive foreground colors for light and dark terminals.
 func NewStyles() Styles {
 	return Styles{
-		Statusline: lipgloss.NewStyle().Foreground(lipgloss.Color("#00B3A4")).Bold(true),
-		Footer:     lipgloss.NewStyle().Foreground(lipgloss.Color("#6B9F7F")),
+		Statusline: lipgloss.NewStyle().Foreground(lipgloss.AdaptiveColor{
+			Light: "#005F5A",
+			Dark:  "#00B3A4",
+		}).Bold(true),
+		Footer: lipgloss.NewStyle().Foreground(lipgloss.AdaptiveColor{
+			Light: "#3B6F4D",
+			Dark:  "#6B9F7F",
+		}),
 	}
 }
