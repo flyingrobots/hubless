@@ -7,6 +7,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
+	"strings"
+	"syscall"
 
 	"github.com/flyingrobots/hubless/internal/release"
 )
@@ -32,6 +35,7 @@ func main() {
 		notesPath  string
 		dryRun     bool
 		skipChecks bool
+		sign       bool
 	)
 
 	flag.StringVar(&repoRoot, "repo", ".", "Repository root (defaults to current directory)")
@@ -39,18 +43,28 @@ func main() {
 	flag.StringVar(&notesPath, "notes", "docs/reference/release-notes.md", "Path to release notes markdown")
 	flag.BoolVar(&dryRun, "dry-run", false, "Show actions without creating a tag")
 	flag.BoolVar(&skipChecks, "skip-checks", false, "Skip fmt/lint/test/docs before tagging")
+	flag.BoolVar(&sign, "sign", false, "Create a GPG-signed release tag")
 	flag.Parse()
+	if flag.NArg() > 0 {
+		fmt.Fprintf(os.Stderr, "unexpected positional arguments: %s\n", strings.Join(flag.Args(), " "))
+		flag.Usage()
+		os.Exit(2)
+	}
 
 	releaser, err := release.New(repoRoot)
 	if err != nil {
 		log.Fatalf("initialize releaser: %v", err)
 	}
 
-	if err := releaser.Run(context.Background(), release.Options{
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	if err := releaser.Run(ctx, release.Options{
 		Version:    version,
 		NotesPath:  notesPath,
 		DryRun:     dryRun,
 		SkipChecks: skipChecks,
+		Sign:       sign,
 	}); err != nil {
 		if errors.Is(err, release.ErrVersionRequired) {
 			fmt.Fprintln(os.Stderr, "--version is required")

@@ -19,6 +19,7 @@ type Options struct {
 	NotesPath  string
 	DryRun     bool
 	SkipChecks bool
+	Sign       bool
 }
 
 type Releaser struct {
@@ -37,6 +38,21 @@ func New(repoRoot string) (*Releaser, error) {
 	absRoot, err := filepath.Abs(repoRoot)
 	if err != nil {
 		return nil, fmt.Errorf("resolve repo root: %w", err)
+	}
+	info, err := os.Stat(absRoot)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return nil, fmt.Errorf("repo root does not exist: %s", absRoot)
+		}
+		return nil, fmt.Errorf("stat repo root: %w", err)
+	}
+	if !info.IsDir() {
+		return nil, fmt.Errorf("repo root is not a directory: %s", absRoot)
+	}
+	cmd := exec.Command("git", "-C", absRoot, "rev-parse", "--is-inside-work-tree")
+	output, err := cmd.CombinedOutput()
+	if err != nil || strings.TrimSpace(string(output)) != "true" {
+		return nil, fmt.Errorf("repo root is not a Git working tree: %s", absRoot)
 	}
 
 	return &Releaser{repoRoot: absRoot}, nil
@@ -78,7 +94,7 @@ func (r *Releaser) Run(ctx context.Context, opts Options) error {
 		fmt.Printf("[dry-run] Ready to tag %s using notes from %s\n", version, notesPath)
 		fmt.Printf("[dry-run] Tag message preview:\n%s\n", trimmedNotes)
 		fmt.Println("[dry-run] Next steps:")
-		fmt.Printf("  git tag -a %s -F <notes>\n", version)
+		fmt.Printf("  git %s\n", strings.Join(tagArgs(version, "<notes>", opts.Sign), " "))
 		fmt.Printf("  git push origin %s\n", version)
 		fmt.Println("  Optionally: gh release create", version, "-F", notesPath)
 		return nil
@@ -103,11 +119,16 @@ func (r *Releaser) Run(ctx context.Context, opts Options) error {
 		return fmt.Errorf("close temp release notes: %w", err)
 	}
 
-	if err := r.runCommand(ctx, "git", "tag", "-a", version, "-F", tempFile.Name()); err != nil {
+	args := tagArgs(version, tempFile.Name(), opts.Sign)
+	if err := r.runCommand(ctx, "git", args...); err != nil {
 		return fmt.Errorf("create tag: %w", err)
 	}
 
-	fmt.Printf("Created annotated tag %s.\n", version)
+	if opts.Sign {
+		fmt.Printf("Created signed tag %s.\n", version)
+	} else {
+		fmt.Printf("Created annotated tag %s.\n", version)
+	}
 	fmt.Println("Next steps:")
 	fmt.Printf("  git push origin %s\n", version)
 	fmt.Println("  Optionally: gh release create", version, "-F", notesPath)
@@ -172,6 +193,14 @@ func (r *Releaser) capture(ctx context.Context, name string, args ...string) (st
 	cmd.Dir = r.repoRoot
 	output, err := cmd.CombinedOutput()
 	return string(output), err
+}
+
+func tagArgs(version, notesPath string, sign bool) []string {
+	mode := "-a"
+	if sign {
+		mode = "-s"
+	}
+	return []string{"tag", mode, version, "-F", notesPath}
 }
 
 // normalizeVersion trims whitespace from v and ensures it begins with a "v".

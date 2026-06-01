@@ -20,6 +20,10 @@
 | --- | --- | --- |
 | — | — | — |
 
+## Unreleased
+
+- Added `hubless release --sign` for GPG-signed release tags and stricter release CLI argument validation.
+
 ## Historical Archives
 
 See `@hubless/issues/generated/archive.md` for the full backlog of completed stories and tasks.
