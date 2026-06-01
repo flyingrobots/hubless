@@ -92,7 +92,25 @@ func RunTransclusion(ctx context.Context, opts TransclusionOptions) error {
 		return fmt.Errorf("run %s: %w\n%s", bin, err, strings.TrimSpace(string(output)))
 	}
 
+	if err := normalizeTrailingNewline(absOutput); err != nil {
+		return fmt.Errorf("normalize output newline: %w", err)
+	}
+
 	return nil
+}
+
+func normalizeTrailingNewline(pathValue string) error {
+	data, err := os.ReadFile(pathValue)
+	if err != nil {
+		return fmt.Errorf("read output: %w", err)
+	}
+
+	normalized := strings.TrimRight(string(data), "\n") + "\n"
+	if normalized == string(data) {
+		return nil
+	}
+
+	return os.WriteFile(pathValue, []byte(normalized), 0o644)
 }
 
 // absolute path fails.

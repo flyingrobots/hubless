@@ -2,6 +2,8 @@ package docscomponents
 
 import (
 	"context"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -37,5 +39,48 @@ func TestRunTransclusionFailsBeforeCommandWhenInputMissing(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "input path does not exist") {
 		t.Fatalf("expected missing input error, got %q", err)
+	}
+}
+
+func TestRunTransclusionNormalizesOutputNewline(t *testing.T) {
+	t.Parallel()
+
+	dir := t.TempDir()
+	bin := filepath.Join(dir, "fake-transclusion")
+	script := `#!/usr/bin/env sh
+set -eu
+out=""
+while [ "$#" -gt 0 ]; do
+  if [ "$1" = "--output" ]; then
+    shift
+    out="$1"
+  fi
+  shift || true
+done
+printf rendered > "$out"
+`
+	if err := os.WriteFile(bin, []byte(script), 0o755); err != nil {
+		t.Fatalf("write fake transclusion binary: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "input.md"), []byte("source\n"), 0o644); err != nil {
+		t.Fatalf("write input: %v", err)
+	}
+
+	err := RunTransclusion(context.Background(), TransclusionOptions{
+		Bin:        bin,
+		BasePath:   dir,
+		InputPath:  "input.md",
+		OutputPath: "output.md",
+	})
+	if err != nil {
+		t.Fatalf("RunTransclusion: %v", err)
+	}
+
+	output, err := os.ReadFile(filepath.Join(dir, "output.md"))
+	if err != nil {
+		t.Fatalf("read output: %v", err)
+	}
+	if string(output) != "rendered\n" {
+		t.Fatalf("expected exactly one trailing newline, got %q", output)
 	}
 }

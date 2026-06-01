@@ -37,7 +37,7 @@ jobs:
         uses: golangci/golangci-lint-action@v9.2.1
         with:
           version: v2.12.2
-          install-mode: binary
+          install-mode: goinstall
           args: ./...
       - name: Go vet
         run: make vet

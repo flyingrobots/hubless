@@ -3,10 +3,8 @@ set -euo pipefail
 
 cd /workspace
 
-# Ensure git allows operations inside mounted workspace
-if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  git config --global --add safe.directory /workspace
-fi
+# Ensure git allows operations inside mounted workspace.
+git config --global --add safe.directory /workspace
 
 export PATH="/usr/local/go/bin:$PATH"
 export GOTOOLCHAIN=local

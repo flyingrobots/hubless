@@ -13,6 +13,7 @@
 - Pinned CI and container markdown-transclusion execution to version 1.2.0 and made the release-test container run as an unprivileged user.
 - Tightened docs hygiene, palette schema validation, and generated Markdown newline normalization.
 - Filtered shipped tasks out of active generated rollups only after all completion badges are present.
+- Built golangci-lint with the active Go toolchain in CI/local containers and made mounted workspaces Git-safe unconditionally.
 
 ## Historical Archives
 

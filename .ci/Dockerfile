@@ -15,8 +15,15 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Go 1.26.3
+ARG TARGETARCH
 ENV GO_VERSION=1.26.3
-RUN curl -fsSLo /tmp/go.tar.gz https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz \
+RUN set -eu; \
+    go_arch="${TARGETARCH:-$(dpkg --print-architecture)}"; \
+    case "$go_arch" in \
+        amd64|arm64) ;; \
+        *) echo "unsupported Go architecture: $go_arch" >&2; exit 1 ;; \
+    esac; \
+    curl -fsSLo /tmp/go.tar.gz "https://go.dev/dl/go${GO_VERSION}.linux-${go_arch}.tar.gz" \
     && tar -C /usr/local -xzf /tmp/go.tar.gz \
     && rm /tmp/go.tar.gz
 ENV PATH="/usr/local/go/bin:${PATH}"
@@ -27,10 +34,9 @@ RUN go env -w GOTOOLCHAIN=local
 ENV MARKDOWN_TRANSCLUSION_VERSION=1.2.0
 RUN npm install -g markdown-transclusion@${MARKDOWN_TRANSCLUSION_VERSION}
 
-# golangci-lint binary
+# golangci-lint built with the active Go toolchain
 ENV GOLANGCI_LINT_VERSION=2.12.2
-RUN curl -sSfL https://github.com/golangci/golangci-lint/releases/download/v${GOLANGCI_LINT_VERSION}/golangci-lint-${GOLANGCI_LINT_VERSION}-linux-amd64.tar.gz \
-    | tar -xz -C /usr/local/bin --strip-components=1 golangci-lint-${GOLANGCI_LINT_VERSION}-linux-amd64/golangci-lint
+RUN GOBIN=/usr/local/bin go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v${GOLANGCI_LINT_VERSION}
 
 WORKDIR /workspace
 
