@@ -42,7 +42,7 @@ Thanks for building Hubless! This document summarizes how we collaborate. For th
 ## Documentation Automation
 
 - Structured data under `@hubless/` now feeds Markdown via reusable snippets in `docs/components/`.
-- Install or clone [`markdown-transclusion`](https://github.com/flyingrobots/markdown-transclusion) (Node ≥20). Set `MARKDOWN_TRANSCLUSION_BIN` to the executable (`markdown-transclusion` if installed globally, or `node`) and `MARKDOWN_TRANSCLUSION_ARGS` to the CLI script path when using a local clone (e.g., `/path/to/markdown-transclusion/dist/cli.js`).
+- Install or clone [`markdown-transclusion`](https://github.com/flyingrobots/markdown-transclusion) (Node ≥20). Set `MARKDOWN_TRANSCLUSION_BIN` to the executable (`markdown-transclusion` if installed globally, or `node`) and `MARKDOWN_TRANSCLUSION_SCRIPT` to the CLI script path when using a local clone (e.g., `/path/to/markdown-transclusion/dist/cli.js`). Use `MARKDOWN_TRANSCLUSION_ARGS` only for additional CLI flags.
 - Run `make docs` (or `./scripts/render-docs.sh`) after editing JSON records or templates. This regenerates shared snippets and rewrites `@hubless/roadmap/generated/README.md` and `@hubless/issues/generated/tasks.md` from their templates.
 - Run `make docs-test` to execute generator unit tests and ensure snippets format as expected.
 - Run `make docs-verify` to confirm all generated Markdown is fully transcluded (no `![[…]]` placeholders).

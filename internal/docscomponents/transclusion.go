@@ -38,6 +38,10 @@ func RunTransclusion(ctx context.Context, opts TransclusionOptions) error {
 	if bin == "" {
 		bin = "markdown-transclusion"
 	}
+	resolvedBin, err := exec.LookPath(bin)
+	if err != nil {
+		return fmt.Errorf("resolve transclusion binary %q: %w", bin, err)
+	}
 
 	basePath := opts.BasePath
 	if basePath == "" {
@@ -57,6 +61,16 @@ func RunTransclusion(ctx context.Context, opts TransclusionOptions) error {
 	if err != nil {
 		return fmt.Errorf("resolve input path: %w", err)
 	}
+	info, err := os.Stat(absInput)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return fmt.Errorf("input path does not exist: %s", absInput)
+		}
+		return fmt.Errorf("stat input path: %w", err)
+	}
+	if info.IsDir() {
+		return fmt.Errorf("input path is a directory: %s", absInput)
+	}
 
 	absOutput, err := makeAbsoluteWithBase(opts.OutputPath, absBasePath)
 	if err != nil {
@@ -71,7 +85,7 @@ func RunTransclusion(ctx context.Context, opts TransclusionOptions) error {
 	args = append(args, absInput)
 	args = append(args, "--output", absOutput, "--base-path", absBasePath)
 
-	cmd := exec.CommandContext(ctx, bin, args...)
+	cmd := exec.CommandContext(ctx, resolvedBin, args...)
 	cmd.Dir = absBasePath
 	output, err := cmd.CombinedOutput()
 	if err != nil {

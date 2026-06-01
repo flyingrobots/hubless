@@ -6,6 +6,7 @@ require (
 	github.com/76creates/stickers v1.5.0
 	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/charmbracelet/lipgloss v1.1.0
+	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 )
 
 require (

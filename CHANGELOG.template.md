@@ -9,6 +9,7 @@
 ## Unreleased
 
 - Added `hubless release --sign` for GPG-signed release tags and stricter release CLI argument validation.
+- Split `MARKDOWN_TRANSCLUSION_SCRIPT` from extra `MARKDOWN_TRANSCLUSION_ARGS` and added transclusion preflight validation.
 
 ## Historical Archives
 

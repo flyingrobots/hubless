@@ -5,9 +5,11 @@ import (
 	"flag"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/flyingrobots/hubless/internal/docscomponents"
+	"github.com/kballard/go-shellquote"
 )
 
 type stringSliceFlag []string
@@ -77,11 +79,13 @@ func main() {
 	flag.StringVar(&graphDirection, "graph-direction", "LR", "Direction for Mermaid dependency graph (LR, RL, TB, BT)")
 	flag.BoolVar(&graphClusters, "graph-clusters", false, "Group dependency graph nodes by type using Mermaid subgraphs")
 	flag.StringVar(&graphPalette, "graph-palette", "evergreen", "Mermaid palette for dependency graph (evergreen, infrared, zerothrow)")
-	flag.StringVar(&paletteFile, "palette-file", "docs/reference/palettes.json", "Optional palette definition file (JSON)")
+	flag.StringVar(&paletteFile, "palette-file", "", "Optional palette definition file (JSON)")
 	flag.Var(&transclusionArgs, "transclusion-args", "Additional argument passed to markdown-transclusion (repeatable)")
 	flag.Parse()
 
 	ctx := context.Background()
+
+	paletteFile = defaultPaletteFile(repoRoot, paletteFile)
 
 	generator, err := docscomponents.NewGenerator(repoRoot, componentsDir, docscomponents.GeneratorOptions{
 		GraphDirection: graphDirection,
@@ -110,6 +114,9 @@ func main() {
 	}
 
 	if len(transclusionArgs) == 0 {
+		if envValue := os.Getenv("MARKDOWN_TRANSCLUSION_SCRIPT"); envValue != "" {
+			transclusionArgs = append(transclusionArgs, envValue)
+		}
 		if envValue := os.Getenv("MARKDOWN_TRANSCLUSION_ARGS"); envValue != "" {
 			transclusionArgs = append(transclusionArgs, parseArgs(envValue)...)
 		}
@@ -149,10 +156,27 @@ func main() {
 	}
 }
 
-// parseArgs splits raw into whitespace-separated fields (using strings.Fields)
-// and returns a newly allocated slice containing those fields. An empty or
-// all-whitespace input yields an empty slice.
+func defaultPaletteFile(repoRoot, explicit string) string {
+	if strings.TrimSpace(explicit) != "" {
+		return explicit
+	}
+	absRoot, err := filepath.Abs(repoRoot)
+	if err != nil {
+		return ""
+	}
+	candidate := filepath.Join(absRoot, "docs", "reference", "palettes.json")
+	if _, err := os.Stat(candidate); err == nil {
+		return candidate
+	}
+	return ""
+}
+
+// parseArgs splits raw with shell-style quote handling and falls back to
+// whitespace fields if the input has malformed shell quoting.
 func parseArgs(raw string) []string {
-	fields := strings.Fields(raw)
+	fields, err := shellquote.Split(raw)
+	if err != nil {
+		fields = strings.Fields(raw)
+	}
 	return append([]string(nil), fields...)
 }

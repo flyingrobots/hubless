@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 IMAGE_NAME="hubless-release-test"
-VERSION="0.0.1"
+VERSION="${VERSION:-0.0.1}"
 
 cd "$ROOT_DIR"
 

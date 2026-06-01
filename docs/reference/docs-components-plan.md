@@ -43,7 +43,7 @@
    export MARKDOWN_TRANSCLUSION_BIN=markdown-transclusion   # global install
    # or
    export MARKDOWN_TRANSCLUSION_BIN=node
-   export MARKDOWN_TRANSCLUSION_ARGS=/path/to/markdown-transclusion/dist/cli.js
+   export MARKDOWN_TRANSCLUSION_SCRIPT=/path/to/markdown-transclusion/dist/cli.js
    ```
 3. From the repo root run:
    ```bash
@@ -52,13 +52,14 @@
    ./scripts/render-docs.sh
    ```
    Optional variables:
+   - `MARKDOWN_TRANSCLUSION_SCRIPT` – optional script path passed as the first CLI argument when `MARKDOWN_TRANSCLUSION_BIN=node`.
    - `MARKDOWN_TRANSCLUSION_BASE` – override the base path passed to the CLI.
    - `MARKDOWN_TRANSCLUSION_ARGS` – extra flags forwarded to the CLI.
    Useful CLI flags:
    - `--graph-direction` (LR/RL/TB/BT) tunes the dependency graph orientation.
    - `--graph-clusters` groups nodes by type using Mermaid subgraphs.
    - `--graph-palette` selects a Mermaid color palette (`evergreen`, `infrared`, `zerothrow`, or any palette declared in `docs/reference/palettes.json`).
-   - `--palette-file` points to an alternate palette JSON document (defaults to `docs/reference/palettes.json`).
+   - `--palette-file` points to an alternate palette JSON document; when omitted, `docs/reference/palettes.json` is used only if it exists.
 4. Validate outputs:
    ```bash
    make docs-test     # generator unit tests

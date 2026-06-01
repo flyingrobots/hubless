@@ -15,10 +15,12 @@ failures=()
 # contains_placeholder returns 0 if the specified file contains an unresolved placeholder of the form `![[...]]`; otherwise returns 1.
 contains_placeholder() {
   local file="$1"
-  if rg -n "!\\[\\[[^]]+\\]\\]" "$file" >/dev/null; then
-    return 0
+  local pattern='!\[\[[^]]+\]\]'
+  if command -v rg >/dev/null 2>&1; then
+    rg -q "$pattern" "$file"
+  else
+    grep -Eq "$pattern" "$file"
   fi
-  return 1
 }
 
 for target in "${TARGETS[@]}"; do
