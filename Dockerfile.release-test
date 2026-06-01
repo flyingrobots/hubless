@@ -9,18 +9,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     npm \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g markdown-transclusion
+ENV MARKDOWN_TRANSCLUSION_VERSION=1.2.0
+RUN npm install -g markdown-transclusion@${MARKDOWN_TRANSCLUSION_VERSION}
+RUN useradd -m -u 10001 appuser
 
 WORKDIR /app
-COPY . /app
+RUN chown appuser:appuser /app
+COPY --chown=appuser:appuser . /app
+USER appuser
 
 RUN rm -rf .git && \
     git init && \
     git config user.name "Release Tester" && \
     git config user.email "tester@example.com" && \
     git add . && \
-    git commit -m "container snapshot" && \
-    git remote remove origin || true
+    git commit -m "container snapshot"
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s CMD go version >/dev/null 2>&1 || exit 1
 CMD ["/bin/bash"]

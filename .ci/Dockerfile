@@ -24,7 +24,8 @@ ENV GOTOOLCHAIN=local
 RUN go env -w GOTOOLCHAIN=local
 
 # Markdown transclusion CLI
-RUN npm install -g markdown-transclusion
+ENV MARKDOWN_TRANSCLUSION_VERSION=1.2.0
+RUN npm install -g markdown-transclusion@${MARKDOWN_TRANSCLUSION_VERSION}
 
 # golangci-lint binary
 ENV GOLANGCI_LINT_VERSION=2.12.2

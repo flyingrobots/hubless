@@ -5,6 +5,10 @@ on:
     branches: [main, docs-release-pipeline]
   pull_request:
 
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -19,9 +23,12 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+          cache: true
 
-      - name: Install markdown-transclusion
-        run: npm install -g markdown-transclusion
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
       - name: gofmt check
         run: make fmt-check
@@ -39,6 +46,9 @@ jobs:
         run: make test
 
       - name: Generate docs
+        env:
+          MARKDOWN_TRANSCLUSION_BIN: npx
+          MARKDOWN_TRANSCLUSION_ARGS: --yes markdown-transclusion@1.2.0
         run: make docs
 
       - name: Verify docs
