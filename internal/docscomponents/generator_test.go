@@ -87,6 +87,9 @@ func TestGeneratorGenerate(t *testing.T) {
 	if !strings.Contains(dependencies, "sample/task/0001") {
 		t.Fatalf("expected task dependency row in dependencies summary, got:\n%s", dependencies)
 	}
+	if !strings.Contains(dependencies, "[sample/task/0001](../../issues/tasks/sample-task-1.json)") {
+		t.Fatalf("expected task dependency link to resolve from generated roadmap README, got:\n%s", dependencies)
+	}
 
 	archivedStories := readFile(t, filepath.Join(componentsDir, "issues", "archived-stories.md"))
 	if !strings.Contains(archivedStories, "sample/story/0001") {
@@ -109,6 +112,70 @@ func TestGeneratorGenerate(t *testing.T) {
 	}
 	if !strings.Contains(graph, "classDef milestone") {
 		t.Fatalf("expected mermaid graph to include class definitions, got:\n%s", graph)
+	}
+
+	features := readFile(t, filepath.Join(componentsDir, "roadmap", "features-table.md"))
+	if !strings.Contains(features, "[sample/feature/0001](../features/sample-feature.json)") {
+		t.Fatalf("expected feature links to resolve from generated roadmap README, got:\n%s", features)
+	}
+
+	tasks := readFile(t, filepath.Join(componentsDir, "issues", "tasks-table.md"))
+	if !strings.Contains(tasks, "[sample/task/0001](../tasks/sample-task-1.json)") {
+		t.Fatalf("expected task links to resolve from generated issues README, got:\n%s", tasks)
+	}
+}
+
+func TestGeneratorGenerateTreatsMissingDataDirsAsEmpty(t *testing.T) {
+	t.Parallel()
+
+	repoRoot := t.TempDir()
+	componentsDir := filepath.Join(repoRoot, "docs", "components")
+	gen, err := docscomponents.NewGenerator(repoRoot, componentsDir, docscomponents.GeneratorOptions{})
+	if err != nil {
+		t.Fatalf("NewGenerator: %v", err)
+	}
+
+	if err := gen.Generate(context.Background()); err != nil {
+		t.Fatalf("Generate should tolerate missing data dirs: %v", err)
+	}
+
+	progress := readFile(t, filepath.Join(componentsDir, "roadmap", "progress.md"))
+	if !strings.Contains(progress, "| Milestones | [----------] 0% | 0 | 0 |") {
+		t.Fatalf("expected empty milestone progress row, got:\n%s", progress)
+	}
+	graph := readFile(t, filepath.Join(componentsDir, "roadmap", "dependencies-graph.md"))
+	if !strings.Contains(graph, "graph LR") {
+		t.Fatalf("expected empty dependency graph to still be generated, got:\n%s", graph)
+	}
+}
+
+func TestGeneratorGenerateRejectsDuplicateGraphIDs(t *testing.T) {
+	t.Parallel()
+
+	repoRoot := t.TempDir()
+	writeJSON(t, filepath.Join(repoRoot, "@hubless", "roadmap", "milestones", "m.json"), map[string]any{
+		"id":     "duplicate/id",
+		"title":  "Milestone",
+		"status": "PLANNED",
+	})
+	writeJSON(t, filepath.Join(repoRoot, "@hubless", "roadmap", "features", "f.json"), map[string]any{
+		"id":     "duplicate/id",
+		"title":  "Feature",
+		"status": "PLANNED",
+	})
+
+	componentsDir := filepath.Join(repoRoot, "docs", "components")
+	gen, err := docscomponents.NewGenerator(repoRoot, componentsDir, docscomponents.GeneratorOptions{})
+	if err != nil {
+		t.Fatalf("NewGenerator: %v", err)
+	}
+
+	err = gen.Generate(context.Background())
+	if err == nil {
+		t.Fatal("expected duplicate dependency graph IDs to fail generation")
+	}
+	if !strings.Contains(err.Error(), "duplicate dependency graph id") {
+		t.Fatalf("expected duplicate ID error, got %q", err)
 	}
 }
 

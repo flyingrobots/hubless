@@ -172,19 +172,19 @@ func (g *Generator) generateRoadmapTables(ctx context.Context, data roadmapArtif
 		{
 			name:           "milestones",
 			records:        data.Milestones,
-			linkPrefix:     "milestones",
+			linkPrefix:     "../milestones",
 			outputFilename: "milestones-table.md",
 		},
 		{
 			name:           "features",
 			records:        data.Features,
-			linkPrefix:     "features",
+			linkPrefix:     "../features",
 			outputFilename: "features-table.md",
 		},
 		{
 			name:           "stories",
 			records:        data.Stories,
-			linkPrefix:     "../issues/stories",
+			linkPrefix:     "../../issues/stories",
 			outputFilename: "stories-table.md",
 		},
 	}
@@ -282,19 +282,19 @@ func (g *Generator) generateDependencySummary(ctx context.Context, data roadmapA
 	}{
 		{
 			heading: "Milestones",
-			rows:    dependencyRowsFromArtifacts(data.Milestones, "milestones"),
+			rows:    dependencyRowsFromArtifacts(data.Milestones, "../milestones"),
 		},
 		{
 			heading: "Features",
-			rows:    dependencyRowsFromArtifacts(data.Features, "features"),
+			rows:    dependencyRowsFromArtifacts(data.Features, "../features"),
 		},
 		{
 			heading: "Stories",
-			rows:    dependencyRowsFromArtifacts(data.Stories, "../issues/stories"),
+			rows:    dependencyRowsFromArtifacts(data.Stories, "../../issues/stories"),
 		},
 		{
 			heading: "Tasks",
-			rows:    dependencyRowsFromTasks(tasks, "tasks"),
+			rows:    dependencyRowsFromTasks(tasks, "../../issues/tasks"),
 		},
 	}
 
@@ -368,17 +368,18 @@ func (g *Generator) generateDependencyGraph(ctx context.Context, data roadmapArt
 		})
 	}
 
-	if len(all) == 0 {
-		return nil
-	}
-
 	nodeIDs := map[string]string{}
 	labels := map[string]string{}
+	seenIDs := map[string]string{}
 
 	for idx, record := range all {
 		if record.id == "" {
 			continue
 		}
+		if previousType, ok := seenIDs[record.id]; ok {
+			return fmt.Errorf("duplicate dependency graph id %q in %s and %s records", record.id, previousType, record.typeLabel)
+		}
+		seenIDs[record.id] = record.typeLabel
 		nodeName := fmt.Sprintf("n%d", idx)
 		nodeIDs[record.id] = nodeName
 		labels[nodeName] = escapeMermaidLabel(fmt.Sprintf("%s\\n%s", record.typeLabel, record.title))
@@ -498,13 +499,19 @@ func (g *Generator) generateTaskTable(ctx context.Context, records []recordWithP
 
 		labels := formatList(record.data.Labels)
 		badges := formatList(record.data.Badges)
+		if labels == "—" {
+			labels = ""
+		}
+		if badges == "—" {
+			badges = ""
+		}
 
 		updated := "—"
 		if record.data.UpdatedAt != nil && strings.TrimSpace(*record.data.UpdatedAt) != "" {
 			updated = *record.data.UpdatedAt
 		}
 
-		link := path.Join("tasks", filepath.Base(record.sourcePath))
+		link := path.Join("../tasks", filepath.Base(record.sourcePath))
 		fmt.Fprintf(
 			builder,
 			"| [%s](%s) | %s | %s | %s | %s | %s | %s |\n",
@@ -703,6 +710,9 @@ func (g *Generator) loadRoadmapArtifacts() (roadmapArtifacts, error) {
 
 func (g *Generator) readArtifactRecords(dir string) ([]recordWithPath[artifactRecord], error) {
 	if _, err := os.Stat(dir); err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return nil, nil
+		}
 		return nil, err
 	}
 
@@ -712,7 +722,7 @@ func (g *Generator) readArtifactRecords(dir string) ([]recordWithPath[artifactRe
 	}
 
 	if len(files) == 0 {
-		return nil, fmt.Errorf("no JSON files found in %s", dir)
+		return nil, nil
 	}
 
 	sort.Strings(files)
@@ -741,6 +751,9 @@ func (g *Generator) readArtifactRecords(dir string) ([]recordWithPath[artifactRe
 
 func (g *Generator) readTaskRecords(dir string) ([]recordWithPath[taskRecord], error) {
 	if _, err := os.Stat(dir); err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return nil, nil
+		}
 		return nil, err
 	}
 
@@ -750,7 +763,7 @@ func (g *Generator) readTaskRecords(dir string) ([]recordWithPath[taskRecord], e
 	}
 
 	if len(files) == 0 {
-		return nil, fmt.Errorf("no JSON files found in %s", dir)
+		return nil, nil
 	}
 
 	sort.Strings(files)
