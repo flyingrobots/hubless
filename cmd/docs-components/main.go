@@ -8,8 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/flyingrobots/hubless/internal/docscomponents"
 	"github.com/kballard/go-shellquote"
+
+	"github.com/flyingrobots/hubless/internal/docscomponents"
 )
 
 type stringSliceFlag []string
