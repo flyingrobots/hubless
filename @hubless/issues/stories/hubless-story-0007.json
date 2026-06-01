@@ -1,0 +1,22 @@
+{
+  "id": "hubless/story/0007",
+  "title": "As a documentarian I can compose docs from reusable components",
+  "status": "PLANNED",
+  "persona": "Documentarian",
+  "need": "maintain consistent documentation without manual duplication",
+  "outcome": "Docs are assembled from shared Markdown snippets using automation integrated with Hubless tooling",
+  "acceptance_criteria": [
+    "Component snippets library exists",
+    "At least one doc (e.g., PRD) generated from components",
+    "Build command integrates snippet assembly"
+  ],
+  "features": [
+    "hubless/feature/docs-components"
+  ],
+  "dependencies": [
+    "hubless/story/0001"
+  ],
+  "tasks": [
+    "hubless/m0/task/0005"
+  ]
+}

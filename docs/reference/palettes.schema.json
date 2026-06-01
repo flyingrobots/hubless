@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/flyingrobots/hubless/docs/reference/palettes.schema.json",
+  "title": "Docs Components Palette Schema",
+  "type": "object",
+  "minProperties": 1,
+  "propertyNames": {
+    "pattern": "^[a-z][a-z0-9-]*$"
+  },
+  "additionalProperties": {
+    "type": "object",
+    "properties": {
+      "milestone": {
+        "$ref": "#/definitions/color"
+      },
+      "feature": {
+        "$ref": "#/definitions/color"
+      },
+      "story": {
+        "$ref": "#/definitions/color"
+      },
+      "task": {
+        "$ref": "#/definitions/color"
+      }
+    },
+    "required": ["milestone", "feature", "story", "task"],
+    "additionalProperties": false
+  },
+  "definitions": {
+    "color": {
+      "type": "object",
+      "properties": {
+        "fill": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "stroke": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "text": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        }
+      },
+      "required": ["fill", "stroke", "text"],
+      "additionalProperties": false
+    }
+  }
+}

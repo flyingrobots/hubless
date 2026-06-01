@@ -1,0 +1,9 @@
+{
+  "$schema": "./palettes.schema.json",
+  "quantum": {
+    "milestone": { "fill": "#121417", "stroke": "#00B3A4", "text": "#F5F7FB" },
+    "feature":   { "fill": "#5AA7F3", "stroke": "#00B3A4", "text": "#121417" },
+    "story":     { "fill": "#C7F36B", "stroke": "#5AA7F3", "text": "#121417" },
+    "task":      { "fill": "#B056A1", "stroke": "#00B3A4", "text": "#F5F7FB" }
+  }
+}

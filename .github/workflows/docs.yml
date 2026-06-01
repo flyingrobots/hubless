@@ -1,0 +1,38 @@
+name: Docs Pipeline
+
+'on':
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: docs-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Generate docs
+        env:
+          MARKDOWN_TRANSCLUSION_BIN: npx
+          MARKDOWN_TRANSCLUSION_ARGS: --yes markdown-transclusion@1.2.0
+        run: make docs
+      - name: Ensure docs are up to date
+        run: git diff --stat --exit-code
+      - name: Run docs tests
+        run: make docs-test

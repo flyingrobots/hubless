@@ -1,0 +1,93 @@
+{
+  "id": "hubless/m0/task/0005",
+  "title": "Evaluate markdown component library",
+  "status": "DONE",
+  "owner": null,
+  "description": "Assess the existing markdown-transclusion project and plan integration or Go-based alternative for reusable documentation components.",
+  "labels": [
+    "m0-foundations",
+    "docs",
+    "automation"
+  ],
+  "links": [
+    {
+      "type": "repo",
+      "url": "https://github.com/flyingrobots/markdown-transclusion",
+      "label": "markdown-transclusion"
+    },
+    {
+      "type": "doc",
+      "url": "../../docs/PRD.md",
+      "label": "PRD"
+    },
+    {
+      "type": "doc",
+      "url": "../../docs/TechSpec.md",
+      "label": "Tech spec"
+    }
+  ],
+  "required_inputs": [
+    {
+      "resource": "https://github.com/flyingrobots/markdown-transclusion",
+      "exclusivity": "read-only",
+      "notes": "Review existing snippet tooling."
+    },
+    {
+      "resource": "../../docs/PRD.md",
+      "exclusivity": "read-only",
+      "notes": "Identify repeated content candidates."
+    },
+    {
+      "resource": "../../@hubless/schema",
+      "exclusivity": "read-only",
+      "notes": "Ensure schema-driven docs compatible with snippet outputs."
+    }
+  ],
+  "expected_outputs": [
+    {
+      "resource": "../../docs/reference/docs-components-plan.md",
+      "notes": "Plan outlining snippet integration approach."
+    },
+    {
+      "resource": "../../@hubless/roadmap/features/hubless-feature-docs-components.json",
+      "notes": "Feature status updated with findings."
+    }
+  ],
+  "expertise": [
+    "Documentation tooling",
+    "Go",
+    "Automation pipelines"
+  ],
+  "dependencies": [
+    "hubless/m0/task/0004"
+  ],
+  "badges": [
+    "Tested",
+    "Documented",
+    "Shipped"
+  ],
+  "created_at": "2025-09-18",
+  "updated_at": "2025-09-20",
+  "notes": [
+    {
+      "at": "2025-09-19T17:20:00Z",
+      "author": "codex",
+      "body": "Integrated markdown-transclusion pipeline, added reusable snippets under docs/components, and documented make docs workflow."
+    },
+    {
+      "at": "2025-09-19T18:05:00Z",
+      "author": "codex",
+      "body": "Reorganized @hubless directories, added progress/dependency/status components, wired them into PRD/TechSpec, and added generator unit tests."
+    },
+    {
+      "at": "2025-09-19T18:25:00Z",
+      "author": "codex",
+      "body": "Parameterised dependency graph output and published archived rollups with CI enforcement."
+    },
+    {
+      "at": "2025-09-20T19:30:00Z",
+      "author": "codex",
+      "body": "Mirrored the GitHub Actions toolchain in a Docker wrapper (`scripts/ci-local.sh`) and updated lint/vet steps so contributors can dry-run the full docs pipeline locally."
+    }
+  ]
+}

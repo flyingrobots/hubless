@@ -1,20 +1,29 @@
 # Hubless Implementation Skeleton
 
 ## Document Control
+
 - Version: 0.1
 - Last updated: 2025-09-18
 - Maintainer: Platform Engineering
 
 ## 1. Purpose
-This reference collects scaffolding snippets for implementing Hubless using Go. It mirrors the architecture described in `docs/TechSpec.md` and provides minimal, compilable examples to accelerate prototyping. The code is illustrative and omits error handling and testing for brevity.
+
+This reference collects scaffolding snippets for implementing Hubless using Go. It mirrors the architecture described in `docs/TechSpec.md` and provides minimal examples to accelerate prototyping. The code is illustrative and may omit imports, helpers, error handling, and tests for brevity.
 
 ## 2. Project Layout
-```
+
+```bash
 hubless/
 ├─ cmd/
+│  ├─ docs-components/
+│  │  └─ main.go               # generated docs component renderer
+│  ├─ release/
+│  │  └─ main.go               # release automation CLI
 │  └─ hubless/
-│     └─ main.go               # composition root
+│     └─ main.go               # planned product composition root
 ├─ internal/
+│  ├─ docscomponents/          # docs component generator
+│  ├─ release/                 # release service
 │  ├─ domain/                  # pure domain types and logic
 │  │  ├─ events.go
 │  │  └─ issue.go
@@ -31,27 +40,36 @@ hubless/
 │        ├─ listview.go
 │        └─ styles.go
 ├─ go.mod
+├─ scripts/
+│  ├─ render-docs.sh
+│  ├─ verify-docs.sh
+│  └─ test-release-docker.sh
 └─ Makefile                    # build/test helpers
 ```
 
 ## 3. Module Definition (`go.mod`)
+
 ```go
 module github.com/flyingrobots/hubless
 
-go 1.22
+go 1.26.3
 
 require (
-    github.com/charmbracelet/bubbles v0.18.0
-    github.com/charmbracelet/bubbletea v0.25.0
-    github.com/charmbracelet/glamour v0.6.0
-    github.com/charmbracelet/lipgloss v0.7.0
+    github.com/charmbracelet/bubbles v1.0.0
+    github.com/charmbracelet/bubbletea v1.3.10
+    github.com/charmbracelet/glamour v1.0.0
+    github.com/charmbracelet/lipgloss v1.1.0
 )
 ```
 
 ## 4. Domain Layer
+
 ### 4.1 Events (`internal/domain/events.go`)
+
 ```go
 package domain
+
+import "time"
 
 type EventType string
 
@@ -78,8 +96,11 @@ type Event struct {
 ```
 
 ### 4.2 Issue Aggregate (`internal/domain/issue.go`)
+
 ```go
 package domain
+
+import "time"
 
 type IssueID string
 
@@ -125,11 +146,28 @@ func Replay(id IssueID, events []Event) Issue {
     }
     return issue
 }
+
+func getString(payload map[string]any, key, fallback string) string {
+    value, ok := payload[key].(string)
+    if !ok || value == "" {
+        return fallback
+    }
+    return value
+}
 ```
 
 ## 5. Application Layer (`internal/application/services.go`)
+
 ```go
 package application
+
+import (
+    "context"
+    "sort"
+
+    "github.com/flyingrobots/hubless/internal/domain"
+    "github.com/flyingrobots/hubless/internal/ports"
+)
 
 type Service struct {
     store ports.EventStore
@@ -180,8 +218,16 @@ func (s *Service) List(ctx context.Context) ([]IssueSummary, error) {
 ```
 
 ## 6. Ports (`internal/ports/repository.go`)
+
 ```go
 package ports
+
+import (
+    "context"
+    "time"
+
+    "github.com/flyingrobots/hubless/internal/domain"
+)
 
 type EventStore interface {
     ListIssues(ctx context.Context) ([]domain.IssueID, error)
@@ -192,8 +238,17 @@ type EventStore interface {
 ```
 
 ## 7. Git Adapter (`internal/adapters/gitstore/git_store.go`)
+
 ```go
 package gitstore
+
+import (
+    "context"
+    "fmt"
+    "strings"
+
+    "github.com/flyingrobots/hubless/internal/domain"
+)
 
 func (s *Store) AppendEvent(ctx context.Context, evt domain.Event) (string, error) {
     tree, err := s.gitWithInput("", "mktree")
@@ -215,8 +270,18 @@ func (s *Store) AppendEvent(ctx context.Context, evt domain.Event) (string, erro
 ```
 
 ## 8. TUI Wiring (`internal/ui/tui/model.go`)
+
 ```go
 package tui
+
+import (
+    "context"
+
+    tea "github.com/charmbracelet/bubbletea"
+    "github.com/charmbracelet/bubbles/list"
+    "github.com/charmbracelet/bubbles/viewport"
+    "github.com/flyingrobots/hubless/internal/application"
+)
 
 type Model struct {
     ctx    context.Context
@@ -251,6 +316,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 ```
 
 ## 9. Next Steps
+
 - Flesh out unit tests for domain replay and adapters.
 - Expand the Git adapter with catalog and feed updates.
 - Integrate TUI commands with mutation operations (`CreateIssue`, `ChangeStatus`, `Comment`).

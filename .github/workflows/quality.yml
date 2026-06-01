@@ -1,0 +1,61 @@
+name: Quality Checks
+
+on:
+  push:
+    branches: [main, docs-release-pipeline]
+  pull_request:
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: gofmt check
+        run: make fmt-check
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@db582008a42febd596419635a5abc9d9815daa9c
+        with:
+          version: v2.12.2
+          install-mode: goinstall
+          args: ./...
+      - name: Go vet
+        run: make vet
+
+      - name: Go tests
+        run: make test
+
+      - name: Generate docs
+        env:
+          MARKDOWN_TRANSCLUSION_BIN: npx
+          MARKDOWN_TRANSCLUSION_ARGS: --yes markdown-transclusion@1.2.0
+        run: make docs
+
+      - name: Verify docs
+        run: make docs-verify
+
+      - name: Ensure docs committed
+        run: |
+          git status --porcelain
+          git diff --stat
+          git diff --exit-code

@@ -1,0 +1,29 @@
+FROM golang:1.26.3
+
+ENV PATH="/usr/local/go/bin:/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    nodejs \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV MARKDOWN_TRANSCLUSION_VERSION=1.2.0
+RUN npm install -g markdown-transclusion@${MARKDOWN_TRANSCLUSION_VERSION}
+RUN useradd -m -u 10001 appuser
+
+WORKDIR /app
+RUN chown appuser:appuser /app
+COPY --chown=appuser:appuser . /app
+USER appuser
+
+RUN rm -rf .git && \
+    git init && \
+    git config user.name "Release Tester" && \
+    git config user.email "tester@example.com" && \
+    git add . && \
+    git commit -m "container snapshot"
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s CMD go version >/dev/null 2>&1 || exit 1
+CMD ["/bin/bash"]

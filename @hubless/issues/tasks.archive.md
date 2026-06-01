@@ -4,4 +4,3 @@ Move completed tasks here once they have badges **Tested**, **Documented**, **Sh
 
 | ID | Title | Completed | Badges | Notes |
 |----|-------|-----------|--------|-------|
-

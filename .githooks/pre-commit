@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Running gofmt check..."
+make fmt-check
+
+echo "Running golangci-lint..."
+if ! command -v golangci-lint >/dev/null 2>&1; then
+  echo "golangci-lint not found. Install from https://golangci-lint.run/ before committing." >&2
+  exit 1
+fi
+make lint
+
+echo "Running go tests..."
+make test
+
+echo "Regenerating docs to ensure sync..."
+BIN="${MARKDOWN_TRANSCLUSION_BIN:-markdown-transclusion}"
+if ! command -v "$BIN" >/dev/null 2>&1; then
+  echo "Required '$BIN' not found. Install it or set MARKDOWN_TRANSCLUSION_BIN." >&2
+  exit 1
+fi
+MARKDOWN_TRANSCLUSION_BIN="$BIN" make docs
+# Abort commit if generation changed files; force developers to stage them.
+if ! git diff --quiet --exit-code; then
+  echo "Docs changed during pre-commit. Stage the updates and re-run commit." >&2
+  git --no-pager diff --stat
+  exit 1
+fi
+
+echo "Pre-commit checks passed."
