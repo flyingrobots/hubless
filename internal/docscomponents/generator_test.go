@@ -53,7 +53,7 @@ func TestGeneratorGenerate(t *testing.T) {
 		"status":       "DONE",
 		"owner":        "dev",
 		"labels":       []any{"docs"},
-		"badges":       []any{"Tested"},
+		"badges":       []any{"Tested", "Documented", "Shipped"},
 		"updated_at":   "2025-09-19",
 		"dependencies": []any{"sample/story/0001"},
 	})
@@ -65,6 +65,16 @@ func TestGeneratorGenerate(t *testing.T) {
 		"labels":       []any{"docs"},
 		"badges":       []any{},
 		"updated_at":   nil,
+		"dependencies": []any{},
+	})
+
+	writeJSON(t, filepath.Join(repoRoot, "@hubless", "issues", "tasks", "sample-task-3.json"), map[string]any{
+		"id":           "sample/task/0003",
+		"title":        "Sample Task Done Missing Badge",
+		"status":       "DONE",
+		"labels":       []any{"docs"},
+		"badges":       []any{"Tested", "Documented"},
+		"updated_at":   "2025-09-20",
 		"dependencies": []any{},
 	})
 
@@ -123,8 +133,22 @@ func TestGeneratorGenerate(t *testing.T) {
 	}
 
 	tasks := readFile(t, filepath.Join(componentsDir, "issues", "tasks-table.md"))
-	if !strings.Contains(tasks, "[sample/task/0001](../tasks/sample-task-1.json)") {
-		t.Fatalf("expected task links to resolve from generated issues README, got:\n%s", tasks)
+	if strings.Contains(tasks, "sample/task/0001") {
+		t.Fatalf("expected shipped DONE task to leave active tasks table, got:\n%s", tasks)
+	}
+	if !strings.Contains(tasks, "[sample/task/0002](../tasks/sample-task-2.json)") {
+		t.Fatalf("expected planned task link in generated issues README, got:\n%s", tasks)
+	}
+	if !strings.Contains(tasks, "[sample/task/0003](../tasks/sample-task-3.json)") {
+		t.Fatalf("expected DONE task missing completion badges to remain active, got:\n%s", tasks)
+	}
+
+	archivedTasks = readFile(t, filepath.Join(componentsDir, "issues", "archived-tasks.md"))
+	if !strings.Contains(archivedTasks, "sample/task/0001") {
+		t.Fatalf("expected shipped DONE task in archive, got:\n%s", archivedTasks)
+	}
+	if strings.Contains(archivedTasks, "sample/task/0003") {
+		t.Fatalf("expected DONE task missing completion badges to stay out of archive, got:\n%s", archivedTasks)
 	}
 }
 

@@ -492,6 +492,10 @@ func (g *Generator) generateTaskTable(ctx context.Context, records []recordWithP
 	builder.WriteString("| --- | --- | --- | --- | --- | --- | --- |\n")
 
 	for _, record := range records {
+		if isArchivableTask(record.data) {
+			continue
+		}
+
 		owner := "_unassigned_"
 		if record.data.Owner != nil && strings.TrimSpace(*record.data.Owner) != "" {
 			owner = *record.data.Owner
@@ -543,6 +547,10 @@ func (g *Generator) generateTaskStatusSummary(ctx context.Context, records []rec
 
 	counts := map[string]int{}
 	for _, record := range records {
+		if isArchivableTask(record.data) {
+			continue
+		}
+
 		status := strings.TrimSpace(record.data.Status)
 		if status == "" {
 			status = "UNKNOWN"
@@ -627,7 +635,7 @@ func (g *Generator) generateArchivedTasks(ctx context.Context, records []recordW
 
 	rows := make([]recordWithPath[taskRecord], 0)
 	for _, record := range records {
-		if isDoneStatus(record.data.Status) {
+		if isArchivableTask(record.data) {
 			rows = append(rows, record)
 		}
 	}
@@ -1009,6 +1017,24 @@ func isDoneStatus(status string) bool {
 	}
 }
 
+func isArchivableTask(record taskRecord) bool {
+	if !isDoneStatus(record.Status) {
+		return false
+	}
+
+	badges := make(map[string]struct{}, len(record.Badges))
+	for _, badge := range record.Badges {
+		badges[strings.ToUpper(strings.TrimSpace(badge))] = struct{}{}
+	}
+
+	for _, required := range []string{"TESTED", "DOCUMENTED", "SHIPPED"} {
+		if _, ok := badges[required]; !ok {
+			return false
+		}
+	}
+	return true
+}
+
 // any other or empty status            -> 5
 func statusRank(status string) int {
 	switch strings.ToUpper(strings.TrimSpace(status)) {
@@ -1056,7 +1082,7 @@ func (g *Generator) generateChangelog(ctx context.Context, records []recordWithP
 
 	done := make([]recordWithPath[taskRecord], 0)
 	for _, record := range records {
-		if isDoneStatus(record.data.Status) {
+		if isArchivableTask(record.data) {
 			done = append(done, record)
 		}
 	}
