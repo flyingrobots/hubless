@@ -18,7 +18,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.25'
+          go-version-file: go.mod
 
       - name: Install markdown-transclusion
         run: npm install -g markdown-transclusion
@@ -27,9 +27,9 @@ jobs:
         run: make fmt-check
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v9.2.1
         with:
-          version: v1.60.2
+          version: v2.12.2
           install-mode: binary
           args: ./...
       - name: Go vet

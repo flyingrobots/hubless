@@ -1,18 +1,26 @@
+version: "2"
+
 run:
   timeout: 5m
   tests: true
+
 linters:
+  default: none
+  enable:
+    - revive
+  exclusions:
+    generated: strict
+  settings:
+    revive:
+      severity: warning
+
+formatters:
   enable:
     - gofmt
     - goimports
-    - revive
-issues:
-  exclude-use-default: false
-
-linters-settings:
-  gofmt:
-    simplify: true
-  goimports:
-    local-prefixes: github.com/flyingrobots/hubless
-  revive:
-    ignore-generated-header: true
+  settings:
+    gofmt:
+      simplify: true
+    goimports:
+      local-prefixes:
+        - github.com/flyingrobots/hubless

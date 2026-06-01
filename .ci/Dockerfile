@@ -14,8 +14,8 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Go 1.25.1
-ENV GO_VERSION=1.25.1
+# Install Go 1.26.3
+ENV GO_VERSION=1.26.3
 RUN curl -fsSLo /tmp/go.tar.gz https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz \
     && tar -C /usr/local -xzf /tmp/go.tar.gz \
     && rm /tmp/go.tar.gz
@@ -27,7 +27,7 @@ RUN go env -w GOTOOLCHAIN=local
 RUN npm install -g markdown-transclusion
 
 # golangci-lint binary
-ENV GOLANGCI_LINT_VERSION=1.60.2
+ENV GOLANGCI_LINT_VERSION=2.12.2
 RUN curl -sSfL https://github.com/golangci/golangci-lint/releases/download/v${GOLANGCI_LINT_VERSION}/golangci-lint-${GOLANGCI_LINT_VERSION}-linux-amd64.tar.gz \
     | tar -xz -C /usr/local/bin --strip-components=1 golangci-lint-${GOLANGCI_LINT_VERSION}-linux-amd64/golangci-lint
 

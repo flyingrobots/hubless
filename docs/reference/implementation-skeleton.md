@@ -42,13 +42,13 @@ hubless/
 ```go
 module github.com/flyingrobots/hubless
 
-go 1.22
+go 1.26.3
 
 require (
-    github.com/charmbracelet/bubbles v0.18.0
-    github.com/charmbracelet/bubbletea v0.25.0
-    github.com/charmbracelet/glamour v0.6.0
-    github.com/charmbracelet/lipgloss v0.7.0
+    github.com/charmbracelet/bubbles v1.0.0
+    github.com/charmbracelet/bubbletea v1.3.10
+    github.com/charmbracelet/glamour v1.0.0
+    github.com/charmbracelet/lipgloss v1.1.0
 )
 ```
 

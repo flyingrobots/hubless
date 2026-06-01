@@ -68,7 +68,7 @@
    ```bash
    ./scripts/ci-local.sh
    ```
-   This builds `.ci/Dockerfile` (Go 1.25.1, Node 20, markdown-transclusion, golangci-lint v1.60.2), mounts the repo at `/workspace`, and executes the same sequence used in GitHub
+   This builds `.ci/Dockerfile` (Go 1.26.3, Node 20, markdown-transclusion, golangci-lint v2.12.2), mounts the repo at `/workspace`, and executes the same sequence used in GitHub
    Actions (`fmt-check`, lightweight lint, `go vet`, tests, docs render, docs verification).
 
 ## Verification
