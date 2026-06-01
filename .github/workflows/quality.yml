@@ -34,7 +34,7 @@ jobs:
         run: make fmt-check
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v9.2.1
+        uses: golangci/golangci-lint-action@db582008a42febd596419635a5abc9d9815daa9c
         with:
           version: v2.12.2
           install-mode: goinstall

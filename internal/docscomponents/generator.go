@@ -1087,15 +1087,6 @@ func (g *Generator) generateChangelog(ctx context.Context, records []recordWithP
 		}
 	}
 
-	sort.Slice(done, func(i, j int) bool {
-		ti := parseTimestamp(derefString(done[i].data.UpdatedAt))
-		tj := parseTimestamp(derefString(done[j].data.UpdatedAt))
-		if !ti.Equal(tj) {
-			return ti.After(tj)
-		}
-		return done[i].data.ID < done[j].data.ID
-	})
-
 	builder := &strings.Builder{}
 	builder.WriteString(generatedNotice)
 	builder.WriteString("\n")
